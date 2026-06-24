@@ -12,7 +12,6 @@
     @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;700&display=swap');
     body {
       margin: 0; padding: 0; font-family: 'Kanit', sans-serif;
-      /* ลอจิกพิเศษ: เรียกหาพื้นหลังทุกนามสกุลยอดนิยมพร้อมกันเพื่อป้องกันปัญหาเข้ารหัสหัวไฟล์ผิดพลาด */
       background: linear-gradient(135deg, rgba(20, 0, 40, 0.82) 0%, rgba(43, 0, 79, 0.85) 50%, rgba(74, 0, 64, 0.82) 100%), 
                   url('bg.png'), url('bg.jpg'), url('bg.jpeg'), url('bg.webp');
       background-size: cover; background-repeat: no-repeat;
@@ -144,7 +143,7 @@
       let parts = ['leftEye', 'rightEye', 'leftShoulder', 'rightShoulder', 'leftWrist', 'rightWrist'];
       parts.forEach(part => {
         let keypoint = pose[part];
-        if (keypoint && keypoint.score > 0.3) {
+        if (keypoint && keypoint.score > 0.1) {
           fill(0, 255, 255); noStroke();
           ellipse(keypoint.x, keypoint.y, 12, 12);
         }
@@ -162,14 +161,18 @@
       let leftShoulder = pose.leftShoulder;
       let rightShoulder = pose.rightShoulder;
 
-      if (leftWrist.score > 0.2 && rightWrist.score > 0.2 && leftEye.score > 0.2) {
-        if (leftWrist.y < leftEye.y || rightWrist.y < rightEye.y) {
+      // เพิ่มระบบดักจับพิกัดแบบยืดหยุ่นสูง (ลดเกณฑ์ score เหลือ 0.1 ป้องกันภาพเบลอขณะกระโดด)
+      if ((leftWrist.score > 0.1 || rightWrist.score > 0.1) && (leftEye.score > 0.1 || rightEye.score > 0.1)) {
+        
+        // จังหวะ UP: แขนข้างใดข้างหนึ่งขึ้นไปสูงกว่าระดับตา/หู (แกน Y ด้านบนค่าน้อยกว่า)
+        if (leftWrist.y < leftEye.y || rightWrist.y < rightEye.y || leftWrist.y < rightEye.y || rightWrist.y < leftEye.y) {
           if (state === "DOWN") {
             state = "UP";
             document.getElementById('ai-status').innerText = "สถานะท่าทาง: ยกมือสุด (UP) ⬆️";
             document.getElementById('ai-status').style.color = "#00ffff";
           }
         } 
+        // จังหวะ DOWN: แขนทั้งสองข้างลดระดับลงมาต่ำกว่าระดับไหล่ (แกน Y ด้านล่างค่ามากกว่า)
         else if (leftWrist.y > leftShoulder.y && rightWrist.y > rightShoulder.y) {
           if (state === "UP") {
             score++;
