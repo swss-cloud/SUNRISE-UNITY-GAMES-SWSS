@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Fitness Fitness Testing System</title>
+    <title>SUNRISE UNITY GAMES SWSS</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
@@ -12,7 +12,6 @@
         @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;700&display=swap');
         body {
             font-family: 'Kanit', sans-serif;
-            /* ดึงภาพพื้นหลัง bg.png มาผสมผสานกับธีมมืดของ Tailwind */
             background: linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(30, 41, 59, 0.9) 100%), 
                         url('bg.png'), url('bg.jpg'), url('bg.jpeg'), url('bg.webp');
             background-size: cover; background-repeat: no-repeat;
@@ -25,9 +24,9 @@
     <div class="container mx-auto px-4 py-8 max-w-6xl">
         <header class="text-center mb-10">
             <h1 class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 mb-2 drop-shadow-md">
-                AI Fitness Tracker
+                SUNRISE UNITY GAMES SWSS
             </h1>
-            <p class="text-slate-300 font-medium">ระบบทดสอบสมรรถภาพทางกายด้วยปัญญาประดิษฐ์ - SWSS</p>
+            <p class="text-slate-300 font-medium">ระบบทดสอบสมรรถภาพทางกายด้วยปัญญาประดิษฐ์ (กระโดดตบ)</p>
         </header>
 
         <div id="setup-section" class="max-w-md mx-auto bg-slate-800/95 border border-slate-700/70 backdrop-blur-md rounded-2xl p-8 shadow-2xl">
@@ -65,13 +64,8 @@
                                 ผู้ทดสอบ: -
                             </span>
                         </div>
-                        <div class="flex bg-slate-900 p-1 border border-slate-700 rounded-xl">
-                            <button id="mode-run" onclick="setMode('run')" class="px-4 py-2 rounded-lg text-sm font-bold bg-cyan-500 text-slate-900 cursor-pointer transition">
-                                🏃‍♂️ วิ่งกับที่
-                            </button>
-                            <button id="mode-jumping" onclick="setMode('jumping')" class="px-4 py-2 rounded-lg text-sm font-bold text-slate-400 hover:text-white cursor-pointer transition">
-                                🤸‍♂️ กระโดดตบ
-                            </button>
+                        <div class="bg-slate-900 px-4 py-1.5 border border-slate-700 rounded-xl text-sm font-bold text-cyan-400">
+                            🤸‍♂️ โหมดกระโดดตบ (Jumping Jacks)
                         </div>
                     </div>
 
@@ -109,9 +103,6 @@
                         <h3 class="text-xl font-bold text-white flex items-center gap-2">
                             📋 ประวัติการทดสอบระบบสถิติ
                         </h3>
-                        <button onclick="clearAllData()" class="text-xs text-rose-400 hover:text-rose-300 font-medium border border-rose-500/30 hover:border-rose-500/60 px-2.5 py-1 rounded-lg transition cursor-pointer">
-                            🗑️ ล้างข้อมูลทั้งหมด
-                        </button>
                     </div>
                     <div class="overflow-x-auto max-h-60">
                         <table class="w-full text-left text-sm">
@@ -156,9 +147,8 @@
     <audio id="beep-sound" src="https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg" preload="auto"></audio>
 
     <script>
-        // --- 1. ประกาศตัวแปร Global คุมระบบ ---
+        // --- ประกาศตัวแปร Global คุมระบบ ---
         let currentUser = { name: '', class: '', color: '' };
-        let currentMode = 'run'; 
         let score = 0;
         let timeLeft = 30;
         let timerInterval = null;
@@ -176,7 +166,7 @@
             pink: { text: 'ชมพู', hex: '#ec4899', bg: 'bg-pink-500/20 text-pink-400 border-pink-500/30' }
         };
 
-        // --- 2. ฟังก์ชันเริ่มเข้าสู่ระบบแอป ---
+        // --- ฟังก์ชันเริ่มเข้าสู่ระบบแอป ---
         function startApp() {
             const name = document.getElementById('user-name').value.trim();
             const textClass = document.getElementById('user-class').value.trim();
@@ -204,27 +194,7 @@
             stopTimer();
         }
 
-        // --- 3. ฟังก์ชันควบคุมโหมดกิฬาทดสอบ ---
-        function setMode(mode) {
-            if(isTesting) return; 
-            currentMode = mode;
-            score = 0;
-            poseState = 'neutral';
-            document.getElementById('score').innerText = score;
-            
-            const btnRun = document.getElementById('mode-run');
-            const btnJumping = document.getElementById('mode-jumping');
-
-            if(mode === 'run') {
-                btnRun.className = "px-4 py-2 rounded-lg text-sm font-bold bg-cyan-500 text-slate-900 cursor-pointer transition";
-                btnJumping.className = "px-4 py-2 rounded-lg text-sm font-bold text-slate-400 hover:text-white cursor-pointer transition";
-            } else {
-                btnJumping.className = "px-4 py-2 rounded-lg text-sm font-bold bg-cyan-500 text-slate-900 cursor-pointer transition";
-                btnRun.className = "px-4 py-2 rounded-lg text-sm font-bold text-slate-400 hover:text-white cursor-pointer transition";
-            }
-        }
-
-        // --- 4. ระบบตั้งเวลา สเตตัสการเล่น ---
+        // --- ระบบตั้งเวลา สเตตัสการเล่น ---
         function startTimer() {
             if (isTesting) return;
             
@@ -279,7 +249,7 @@
             document.getElementById('btn-save').className = "bg-gradient-to-r from-emerald-400 to-green-500 hover:from-emerald-500 hover:to-green-600 text-slate-950 font-bold py-2 px-3 text-sm rounded-lg shadow-md cursor-pointer transition transform active:scale-95";
         }
 
-        // --- 5. LOGIC AI COMPUTER VISION (MediaPipe Pose ความแม่นยำสูง) ---
+        // --- LOGIC AI COMPUTER VISION (MediaPipe Pose ความแม่นยำสูง) ---
         function initCamera() {
             if (window.cameraInitialized) return;
 
@@ -319,63 +289,40 @@
             if (results.poseLandmarks) {
                 const landmarks = results.poseLandmarks;
 
-                // แก้ไขบั๊กเรียกชื่อตัวแปรและขยายจุดสแกนให้ตรวจจับโครงกระดูกครบส่วน
+                // แมปพิกัดข้อต่อของกระโดดตบ
                 const leftWrist = landmarks[15];
                 const rightWrist = landmarks[16];
                 const leftEar = landmarks[7];
                 const rightEar = landmarks[8];
                 const leftHip = landmarks[23];
                 const rightHip = landmarks[24];
-                const leftKnee = landmarks[25];
-                const rightKnee = landmarks[26];
                 const leftAnkle = landmarks[27];
                 const rightAnkle = landmarks[28];
                 const leftShoulder = landmarks[11];
                 const rightShoulder = landmarks[12];
 
-                // วาดโครงกระดูกไฮเทคเชื่อมข้อมือ แขน ขา สะโพก ทั้งหมดลงหน้าจอเพื่อตรวจเช็กระยะยืน
-                drawSkeleton(canvasCtx, landmarks, results.poseLandmarks);
-                drawKeypoints(canvasCtx, [leftWrist, rightWrist, leftKnee, rightKnee, leftShoulder, rightShoulder]);
+                // วาดโครงกระดูกเลเซอร์เชื่อมต่ออวัยวะ
+                drawSkeleton(canvasCtx, landmarks);
+                drawKeypoints(canvasCtx, [leftWrist, rightWrist, leftShoulder, rightShoulder]);
 
                 if (isTesting) {
-                    if (currentMode === 'run') {
-                        // === ลอจิกวิ่งกับที่ (High Knees) ปรับปรุงความไว ===
-                        if (leftKnee.visibility > 0.4 || rightKnee.visibility > 0.4) {
-                            const hipYThreshold = (leftHip.y + rightHip.y) / 2;
-                            // ขยับค่า Offset เล็กน้อยให้จับความสูงเข่าง่ายขึ้นสำหรับเด็กเล็ก
-                            if (leftKnee.y < (hipYThreshold + 0.02) || rightKnee.y < (hipYThreshold + 0.02)) {
-                                if (poseState === 'neutral') {
-                                    score++;
-                                    document.getElementById('score').innerText = score;
-                                    poseState = 'knee-up'; 
-                                }
-                            } else if (leftKnee.y > (hipYThreshold + 0.08) && rightKnee.y > (hipYThreshold + 0.08)) {
-                                poseState = 'neutral';
+                    // === ลอจิกกระโดดตบ (Jumping Jacks) เสถียรสูง แม่นยำ ===
+                    if (leftWrist.visibility > 0.3 || rightWrist.visibility > 0.3) {
+                        const handsAboveEars = (leftWrist.y < leftEar.y) || (rightWrist.y < rightEar.y);
+                        
+                        const hipDistance = Math.abs(leftHip.x - rightHip.x);
+                        const ankleDistance = Math.abs(leftAnkle.x - rightAnkle.x);
+                        const legsSpread = ankleDistance > (hipDistance * 1.3);
+
+                        if (handsAboveEars && legsSpread) {
+                            if (poseState === 'neutral') {
+                                poseState = 'expanded'; 
                             }
-                        }
-
-                    } else if (currentMode === 'jumping') {
-                        // === ลอจิกกระโดดตบ (Jumping Jacks) เสถียรสูง แก้อาการนับยาก ===
-                        if (leftWrist.visibility > 0.3 || rightWrist.visibility > 0.3) {
-                            // 1. เช็กมือยกพ้นระดับหู (ใช้ได้ทั้งสองฝั่งอย่างยืดหยุ่น ป้องกันมุมกล้องหลุด)
-                            const handsAboveEars = (leftWrist.y < leftEar.y) || (rightWrist.y < rightEar.y);
-                            
-                            // 2. เช็กขากางกว้างกว่าสะโพก (คูณ 1.3 เพื่อให้กางขาปกติก็ตรวจจับได้ ไม่ต้องถ่างกว้างเกินไป)
-                            const hipDistance = Math.abs(leftHip.x - rightHip.x);
-                            const ankleDistance = Math.abs(leftAnkle.x - rightAnkle.x);
-                            const legsSpread = ankleDistance > (hipDistance * 1.3);
-
-                            if (handsAboveEars && legsSpread) {
-                                if (poseState === 'neutral') {
-                                    poseState = 'expanded'; 
-                                }
-                            } else if (!handsAboveEars && (leftWrist.y > leftShoulder.y && rightWrist.y > rightShoulder.y)) {
-                                // ดึงมือลงมาต่ำกว่าไหล่ รวบขาตามเดิม นับคะแนนทันทีสมบูรณ์แบบ
-                                if (poseState === 'expanded') {
-                                    score++;
-                                    document.getElementById('score').innerText = score;
-                                    poseState = 'neutral';
-                                }
+                        } else if (!handsAboveEars && (leftWrist.y > leftShoulder.y && rightWrist.y > rightShoulder.y)) {
+                            if (poseState === 'expanded') {
+                                score++;
+                                document.getElementById('score').innerText = score;
+                                poseState = 'neutral';
                             }
                         }
                     }
@@ -384,12 +331,12 @@
             canvasCtx.restore();
         }
 
-        // ฟังก์ชันวาดเส้นโครงกระดูกเลเซอร์สีฟ้าโยงทั้งตัวสไตล์วิทยาศาสตร์การกีฬา
+        // ฟังก์ชันวาดเส้นโครงกระดูกสไตล์วิทยาศาสตร์การกีฬา
         function drawSkeleton(ctx, landmarks) {
             const connections = [
-                [11, 12], [11, 13], [13, 15], [12, 14], [14, 16], // แขนบน-ล่าง
-                [11, 23], [12, 24], [23, 24],                     // ลำตัว-สะโพก
-                [23, 25], [25, 27], [24, 26], [26, 28]              // ขา-ข้อเท้า
+                [11, 12], [11, 13], [13, 15], [12, 14], [14, 16], 
+                [11, 23], [12, 24], [23, 24],                     
+                [23, 25], [25, 27], [24, 26], [26, 28]              
             ];
             connections.forEach(([i, j]) => {
                 const ptA = landmarks[i];
@@ -418,7 +365,7 @@
             });
         }
 
-        // --- 6. ระบบบันทึกข้อมูลและวิเคราะห์ผลสถิติ ---
+        // --- ระบบบันทึกข้อมูลและวิเคราะห์ผลสถิติ ---
         function saveScore() {
             if(score === 0) {
                 alert("กรุณาทำการทดสอบให้ได้คะแนนมากกว่า 0 ครั้งก่อนบันทึกครับ");
@@ -431,7 +378,7 @@
                 name: currentUser.name,
                 class: currentUser.class,
                 color: currentUser.color,
-                mode: currentMode === 'run' ? 'วิ่งกับที่' : 'กระโดดตบ',
+                mode: 'กระโดดตบ',
                 score: score,
                 date: new Date().toLocaleDateString('th-TH')
             };
@@ -468,17 +415,9 @@
             });
 
             const colorSums = { purple: 0, orange: 0, pink: 0 };
-            const modeDetails = {
-                purple: { run: 0, jumping: 0 },
-                orange: { run: 0, jumping: 0 },
-                pink: { run: 0, jumping: 0 }
-            };
-
             history.forEach(item => {
                 if (colorSums[item.color] !== undefined) {
                     colorSums[item.color] += item.score;
-                    const modeKey = item.mode === 'วิ่งกับที่' ? 'run' : 'jumping';
-                    modeDetails[item.color][modeKey] += item.score;
                 }
             });
 
@@ -501,26 +440,15 @@
             analysisText += `<ul class="list-disc pl-4 space-y-1 mt-2 text-slate-300 text-xs">`;
             ['purple', 'orange', 'pink'].forEach(col => {
                 const total = colorSums[col];
-                const runScore = modeDetails[col].run;
-                const jumpScore = modeDetails[col].jumping;
-                
                 if (total > 0) {
-                    let trait = "";
-                    if (runScore > jumpScore * 1.25) {
-                        trait = "โดดเด่นด้านความทนทานจากวิ่งกับที่ แต่อัตรากระโดดตบยังพัฒนาได้อีก";
-                    } else if (jumpScore > runScore * 1.25) {
-                        trait = "มีความคล่องตัวและการสอดประสานร่างกายดีเยี่ยมจากคะแนนกระโดดตบสูง";
-                    } else {
-                        trait = "มีสมรรถภาพร่างกายที่สมดุลดีเยี่ยมทั้งความอึดและความยืดหยุ่น";
-                    }
-                    analysisText += `<li><strong class="text-white">สี${colorMap[col].text}:</strong> ${trait} <span class="text-slate-400">(วิ่ง ${runScore} | โดด ${jumpScore})</span></li>`;
+                    analysisText += `<li><strong class="text-white">สี${colorMap[col].text}:</strong> มีความคล่องตัวและการประสานร่างกายที่ดีในท่ากระโดดตบ <span class="text-slate-400">(รวมสะสม ${total} ครั้ง)</span></li>`;
                 }
             });
             analysisText += `</ul>`;
             analysisBox.innerHTML = analysisText;
         }
 
-        // --- 7. แผนภูมิวิเคราะห์ผลกราฟแท่ง ---
+        // --- แผนภูมิวิเคราะห์ผลกราฟแท่ง ---
         function initChart() {
             if (colorChart) return;
             const ctx = document.getElementById('colorChart').getContext('2d');
@@ -554,13 +482,6 @@
                     }
                 }
             });
-        }
-
-        function clearAllData() {
-            if(confirm("คุณต้องการลบสถิติผลการทดสอบทั้งหมดใช่หรือไม่? ข้อมูลจะไม่สามารถกู้คืนได้")) {
-                localStorage.removeItem('fitness_history');
-                updateDashboard();
-            }
         }
     </script>
 </body>
