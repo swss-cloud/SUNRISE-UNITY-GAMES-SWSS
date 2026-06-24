@@ -8,11 +8,11 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;700;900&display=swap');
         body {
             font-family: 'Kanit', sans-serif;
-            /* เพิ่มความเข้ม Deep Dark ของเฉดสีพื้นหลังเพื่อให้ตัดกับสีสันของปุ่มได้อย่างคมชัดเป็นพิเศษ */
             background: linear-gradient(135deg, rgba(7, 10, 18, 0.96) 0%, rgba(3, 38, 63, 0.92) 50%, rgba(5, 8, 15, 0.98) 100%), 
                         url('bg.png'), url('bg.jpg'), url('bg.jpeg'), url('bg.webp');
             background-size: cover; background-repeat: no-repeat;
@@ -24,14 +24,12 @@
 
     <div class="container mx-auto px-4 py-8 max-w-6xl">
         <header class="text-center mb-10">
-            <!-- ปรับสีสันของข้อความให้สดและสว่างขึ้นในโทนฟ้า-น้ำเงิน-เหลืองทอง -->
             <h1 class="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-yellow-300 mb-2 drop-shadow-[0_4px_20px_rgba(34,211,238,0.5)] tracking-wider">
                 SUNRISE UNITY GAMES SWSS
             </h1>
             <p class="text-yellow-400 font-black tracking-widest text-sm uppercase drop-shadow">AI Physical Fitness Test System (Jumping Jacks)</p>
         </header>
 
-        <!-- ส่วนกรอกข้อมูล (เพิ่มความเข้มของกรอบและเน้นขอบเรืองแสงสีฟ้านีออนชัดๆ) -->
         <div id="setup-section" class="max-w-md mx-auto bg-slate-950/95 border-2 border-cyan-400 rounded-2xl p-8 shadow-[0_0_40px_rgba(34,211,238,0.3)]">
             <h2 class="text-2xl font-black mb-6 text-center text-yellow-300 border-b-2 border-slate-800 pb-3 tracking-wide">ข้อมูลผู้เข้าทดสอบ</h2>
             <div class="space-y-4">
@@ -57,7 +55,6 @@
             </div>
         </div>
 
-        <!-- หน้าบอร์ดทดสอบหลัก -->
         <div id="main-section" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-8">
             
             <div class="lg:col-span-2 space-y-6">
@@ -73,7 +70,6 @@
                         </div>
                     </div>
 
-                    <!-- กล่องแสดงวิดีโอกล้องสแกนร่างกาย (ขอบสีเทาเข้มตัดเส้นคม) -->
                     <div class="relative bg-black rounded-xl overflow-hidden aspect-video border-4 border-slate-800 shadow-2xl flex items-center justify-center">
                         <video id="webcam" class="hidden" autoplay playsinline></video>
                         <canvas id="output_canvas" class="w-full h-full object-cover transform -scale-x-100"></canvas>
@@ -83,7 +79,6 @@
                         </div>
                     </div>
 
-                    <!-- แถบรายงานคะแนนความคมชัดสูง (ปรับเวลาเหลือ 20s เริ่มต้น) -->
                     <div class="grid grid-cols-3 gap-4 mt-6 text-center">
                         <div class="bg-black border-2 border-blue-900 p-4 rounded-xl shadow-2xl">
                             <p class="text-sm text-cyan-400 uppercase tracking-wider font-black">เวลาที่เหลือ</p>
@@ -94,18 +89,22 @@
                             <p id="score" class="text-4xl font-black text-emerald-400 mt-1 drop-shadow">0</p>
                         </div>
                         <div class="flex flex-col justify-center gap-2">
-                            <!-- ปุ่มเริ่มจับเวลาสีเหลืองเรืองแสง คมชัดสูงมาก -->
-                            <button id="btn-start" onclick="startTimer()" class="bg-yellow-400 hover:bg-yellow-300 text-slate-950 font-black py-2.5 px-3 text-base rounded-lg shadow-[0_0_20px_rgba(234,179,8,0.4)] cursor-pointer transition transform active:scale-95 border-b-4 border-yellow-600">
+                            <button id="btn-start" onclick="startTimer()" class="bg-yellow-400 hover:bg-yellow-300 text-slate-950 font-black py-2 px-3 text-sm rounded-lg shadow-[0_0_15px_rgba(234,179,8,0.3)] cursor-pointer transition transform active:scale-95 border-b-4 border-yellow-600">
                                 ▶️ เริ่มจับเวลา
                             </button>
-                            <button id="btn-save" onclick="saveScore()" disabled class="bg-slate-900 text-slate-600 font-bold py-2.5 px-3 text-sm rounded-lg opacity-40 cursor-not-allowed transition border border-slate-800">
+                            <button id="btn-save" onclick="saveScore()" disabled class="bg-slate-900 text-slate-600 font-bold py-2 px-3 text-sm rounded-lg opacity-40 cursor-not-allowed transition border border-slate-800">
                                 💾 บันทึกคะแนน
                             </button>
                         </div>
                     </div>
+
+                    <div class="mt-4 text-right">
+                        <button id="btn-pdf" onclick="generatePDF()" disabled class="bg-slate-900 text-slate-600 font-bold py-2.5 px-4 rounded-xl text-sm opacity-40 cursor-not-allowed transition border border-slate-800 shadow">
+                            📄 ดาวน์โหลด PDF รายบุคคล
+                        </button>
+                    </div>
                 </div>
 
-                <!-- ตารางประวัติผลการทดสอบ -->
                 <div class="bg-slate-950/95 border border-slate-800 backdrop-blur-md rounded-2xl p-6 shadow-2xl">
                     <div class="flex justify-between items-center mb-4 border-b-2 border-slate-900 pb-3">
                         <h3 class="text-xl font-bold text-white flex items-center gap-2">
@@ -130,7 +129,6 @@
                 </div>
             </div>
 
-            <!-- คอลัมน์ แดชบอร์ดแผนภูมิคะแนน -->
             <div class="space-y-6">
                 <div class="bg-slate-950/95 border-2 border-blue-950 backdrop-blur-md rounded-2xl p-6 shadow-2xl">
                     <h3 class="text-xl font-black mb-4 text-yellow-300">📊 คะแนนรวมแยกตามสี</h3>
@@ -154,6 +152,41 @@
         </div>
     </div>
 
+    <div class="hidden">
+        <div id="pdf-template" style="font-family: 'Kanit', sans-serif; color: #1e293b; padding: 40px; background: #fff;">
+            <div style="text-align: center; border-bottom: 3px double #0284c7; padding-bottom: 15px; margin-bottom: 25px;">
+                <h2 style="font-size: 24px; font-weight: bold; color: #0369a1; margin: 0;">SUNRISE UNITY GAMES SWSS</h2>
+                <p style="font-size: 14px; color: #64748b; margin: 5px 0 0 0;">ใบรายงานผลการทดสอบสมรรถภาพทางกายด้วยระบบปัญญาประดิษฐ์ (AI)</p>
+            </div>
+            <div style="margin-bottom: 25px; font-size: 15px; line-height: 1.8;">
+                <p><strong>วันที่ทดสอบ:</strong> <span id="pdf-date">-</span></p>
+                <p><strong>ชื่อ-นามสกุล ผู้เข้าทดสอบ:</strong> <span id="pdf-name">-</span></p>
+                <p><strong>ระดับชั้นเรียน / ห้อง:</strong> <span id="pdf-class">-</span></p>
+                <p><strong>กลุ่มสี / สังกัดเสือ:</strong> <span id="pdf-color">-</span></p>
+                <p><strong>ประเภทการทดสอบ:</strong> กิจกรรมกระโดดตบ (Jumping Jacks) เป็นเวลา 20 วินาที</p>
+            </div>
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; text-align: center; margin-bottom: 30px;">
+                <span style="font-size: 14px; color: #475569; display: block; font-weight: bold; text-transform: uppercase;">คะแนนรวมที่ทำได้</span>
+                <span id="pdf-score" style="font-size: 48px; font-weight: 900; color: #16a34a;">0</span>
+                <span style="font-size: 18px; font-weight: bold; color: #16a34a; display: block; margin-top: 5px;">ครั้ง (ในเวลา 20 วินาที)</span>
+            </div>
+            <div style="font-size: 14px; color: #334155; border-left: 4px solid #0ea5e9; padding-left: 15px; margin-bottom: 40px;">
+                <p style="font-weight: bold; margin: 0 0 5px 0;">💡 เกณฑ์การประเมินเบื้องต้น:</p>
+                <p id="pdf-evaluation" style="margin: 0; color: #475569;">-</p>
+            </div>
+            <div style="margin-top: 60px; display: flex; justify-content: space-between; font-size: 14px;">
+                <div style="text-align: center; width: 200px;">
+                    <p style="margin-bottom: 50px;">ลงชื่อ......................................................</p>
+                    <p>(......................................................)<br>ผู้เข้ารับการทดสอบ</p>
+                </div>
+                <div style="text-align: center; width: 200px;">
+                    <p style="margin-bottom: 50px;">ลงชื่อ......................................................</p>
+                    <p>(......................................................)<br>กรรมการผู้จัดการทดสอบ</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <audio id="beep-sound" src="https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg" preload="auto"></audio>
 
     <script>
@@ -162,7 +195,7 @@
 
         let currentUser = { name: '', class: '', color: '' };
         let score = 0;
-        let timeLeft = 20; // ⏱️ ปรับเวลาการเล่นเหลือ 20 วินาทีตามบรีฟเด็ดขาด
+        let timeLeft = 20; 
         let timerInterval = null;
         let isTesting = false;
         let poseState = 'neutral'; 
@@ -172,7 +205,6 @@
         const canvasCtx = canvasElement.getContext('2d');
         let colorChart = null;
 
-        // ปรับแต่งสีสันโค้ดสีแท็บป้ายข้อมูลในตารางให้สดใส คมชัดสูงขึ้น
         const colorMap = {
             purple: { text: 'ม่วง', hex: '#c084fc', bg: 'bg-purple-950 text-purple-300 border-purple-500/50 font-black' },
             orange: { text: 'ส้ม', hex: '#ff781f', bg: 'bg-orange-950 text-orange-400 border-orange-500/50 font-black' },
@@ -210,12 +242,16 @@
             if (isTesting) return;
             
             score = 0;
-            timeLeft = 20; // ปรับเซตเวลาถอยหลังตอนเริ่มรอบใหม่ให้คงที่ที่ 20 วินาที
+            timeLeft = 20; 
             poseState = 'neutral';
             document.getElementById('score').innerText = score;
             document.getElementById('timer').innerText = timeLeft + "s";
+            
+            // รีเซ็ตสถานะปุ่ม
             document.getElementById('btn-save').disabled = true;
-            document.getElementById('btn-save').className = "bg-slate-900 text-slate-600 border border-slate-800 font-bold py-2.5 px-3 text-sm rounded-lg opacity-40 cursor-not-allowed transition";
+            document.getElementById('btn-save').className = "bg-slate-900 text-slate-600 border border-slate-800 font-bold py-2 px-3 text-sm rounded-lg opacity-40 cursor-not-allowed transition";
+            document.getElementById('btn-pdf').disabled = true;
+            document.getElementById('btn-pdf').className = "bg-slate-900 text-slate-600 font-bold py-2.5 px-4 rounded-xl text-sm opacity-40 cursor-not-allowed transition border border-slate-800 shadow";
 
             const overlay = document.getElementById('countdown-overlay');
             overlay.classList.remove('hidden');
@@ -257,7 +293,7 @@
             document.getElementById('btn-start').classList.remove('opacity-50');
             
             document.getElementById('btn-save').disabled = false;
-            document.getElementById('btn-save').className = "bg-gradient-to-r from-emerald-400 to-green-500 hover:from-emerald-500 hover:to-green-600 text-slate-950 font-black py-2.5 px-3 text-sm rounded-lg shadow-md cursor-pointer transition transform active:scale-95 border-b-4 border-green-700";
+            document.getElementById('btn-save').className = "bg-gradient-to-r from-emerald-400 to-green-500 hover:from-emerald-500 hover:to-green-600 text-slate-950 font-black py-2 px-3 text-sm rounded-lg shadow-md cursor-pointer transition transform active:scale-95 border-b-4 border-green-700";
         }
 
         function initCamera() {
@@ -351,7 +387,6 @@
                     ctx.beginPath();
                     ctx.moveTo(ptA.x * canvasElement.width, ptA.y * canvasElement.height);
                     ctx.lineTo(ptB.x * canvasElement.width, ptB.y * canvasElement.height);
-                    // สลัดสีเลเซอร์เชื่อมข้อต่อให้เป็นสีน้ำเงินนีออนเรืองแสงเข้มชัดสูง
                     ctx.strokeStyle = 'rgba(0, 191, 255, 0.85)';
                     ctx.lineWidth = 4;
                     ctx.stroke();
@@ -364,7 +399,6 @@
                 if(pt && pt.visibility > 0.4) {
                     ctx.beginPath();
                     ctx.arc(pt.x * canvasElement.width, pt.y * canvasElement.height, 8, 0, 2 * Math.PI);
-                    // ปรับสีจุดข้อต่ออวัยวะหลักให้เป็นสีเหลืองทองสว่าง คมชัดสูงสะดุดตา
                     ctx.fillStyle = '#fbbf24';
                     ctx.shadowBlur = 12;
                     ctx.shadowColor = '#fbbf24';
@@ -393,9 +427,14 @@
             history.push(record);
             localStorage.setItem('fitness_history', JSON.stringify(history));
             
+            // ปิดปุ่มบันทึก
             document.getElementById('btn-save').disabled = true;
             document.getElementById('btn-save').className = "bg-slate-900 text-slate-600 border border-slate-800 font-bold py-2.5 px-3 text-sm rounded-lg opacity-40 cursor-not-allowed transition";
             
+            // เปิดใช้งานปุ่ม PDF
+            document.getElementById('btn-pdf').disabled = false;
+            document.getElementById('btn-pdf').className = "bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-500 hover:to-yellow-600 text-slate-950 font-black py-2.5 px-4 rounded-xl text-sm shadow cursor-pointer transition transform active:scale-95 border-b-2 border-amber-600";
+
             updateDashboard();
             sendToSheets(record);
         }
@@ -425,6 +464,36 @@
                     statusText.className = "text-xs font-black text-rose-400";
                     alert("บันทึกข้อมูลในเครื่องสำเร็จ แต่ไม่สามารถส่งไป Google Sheet ได้");
                 });
+        }
+
+        // ฟังก์ชันสร้างและดาวน์โหลดไฟล์ PDF รายบุคคล
+        function generatePDF() {
+            document.getElementById('pdf-date').innerText = new Date().toLocaleDateString('th-TH');
+            document.getElementById('pdf-name').innerText = currentUser.name;
+            document.getElementById('pdf-class').innerText = currentUser.class;
+            document.getElementById('pdf-color').innerText = `สี${colorMap[currentUser.color].text}`;
+            document.getElementById('pdf-score').innerText = score;
+
+            // คํานวณเกณฑ์ประเมินเบื้องต้นใส่ใน PDF
+            let evaluation = "";
+            if(score >= 25) evaluation = "ระดับ: ดีเยี่ยม (Excellent) - มีความคล่องตัว สปีด และความทนทานของกล้ามเนื้ออยู่ในเกณฑ์สูงมาก";
+            else if(score >= 18) evaluation = "ระดับ: ดี (Good) - สมรรถภาพทางกายมีความสมบูรณ์พร้อมตามเกณฑ์มาตรฐาน";
+            else if(score >= 10) evaluation = "ระดับ: ผ่าน (Fair) - อยู่ในเกณฑ์มาตรฐาน ควรหมั่นออกกำลังกายอย่างต่อเนื่องเพื่อพัฒนาศักยภาพ";
+            else evaluation = "ระดับ: ปรับปรุง (Improvement) - ต่ำกว่าเกณฑ์มาตรฐาน ควรฝึกซ้อมจังหวะการประสานงานของร่างกายเพิ่มเติม";
+            
+            document.getElementById('pdf-evaluation').innerText = evaluation;
+
+            const element = document.getElementById('pdf-template');
+            const opt = {
+                margin:       10,
+                filename:     `ผลทดสอบ_${currentUser.name}_${currentUser.class}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            // ดำเนินการแปลงเป็น PDF และดาวน์โหลดอัตโนมัติ
+            html2pdf().set(opt).from(element).save();
         }
 
         function updateDashboard() {
@@ -482,7 +551,6 @@
             analysisBox.innerHTML = analysisText;
         }
 
-        // ปรับสีกราฟแท่งให้สีสันสดและเด่นชัดตัดกับแบล็กกราวด์ที่มืดลง
         function initChart() {
             if (colorChart) return;
             const ctx = document.getElementById('colorChart').getContext('2d');
