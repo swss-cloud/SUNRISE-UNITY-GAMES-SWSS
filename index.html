@@ -9,10 +9,11 @@
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js" crossorigin="anonymous"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;700;900&display=swap');
         body {
             font-family: 'Kanit', sans-serif;
-            background: linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(30, 41, 59, 0.9) 100%), 
+            /* พื้นหลังไล่เฉดโทนน้ำเงินเข้ม-ดำ ซ้อนทับภาพ bg.png */
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(7, 89, 133, 0.85) 50%, rgba(15, 23, 42, 0.95) 100%), 
                         url('bg.png'), url('bg.jpg'), url('bg.jpeg'), url('bg.webp');
             background-size: cover; background-repeat: no-repeat;
             background-attachment: fixed; background-position: center;
@@ -23,32 +24,32 @@
 
     <div class="container mx-auto px-4 py-8 max-w-6xl">
         <header class="text-center mb-10">
-            <h1 class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 mb-2 drop-shadow-md">
+            <h1 class="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-amber-400 mb-2 drop-shadow-[0_4px_12px_rgba(14,165,233,0.3)] tracking-wider">
                 SUNRISE UNITY GAMES SWSS
             </h1>
-            <p class="text-slate-300 font-medium">ระบบทดสอบสมรรถภาพทางกายด้วยปัญญาประดิษฐ์ (กระโดดตบ)</p>
+            <p class="text-amber-300 font-bold tracking-widest text-sm uppercase">AI Physical Fitness Test System (Jumping Jacks)</p>
         </header>
 
-        <div id="setup-section" class="max-w-md mx-auto bg-slate-800/95 border border-slate-700/70 backdrop-blur-md rounded-2xl p-8 shadow-2xl">
-            <h2 class="text-2xl font-bold mb-6 text-center text-white">ข้อมูลผู้เข้าทดสอบ</h2>
+        <div id="setup-section" class="max-w-md mx-auto bg-slate-900/90 border-2 border-cyan-500/40 backdrop-blur-md rounded-2xl p-8 shadow-[0_0_30px_rgba(14,165,233,0.2)]">
+            <h2 class="text-2xl font-black mb-6 text-center text-amber-400 border-b-2 border-slate-700 pb-3 tracking-wide">ข้อมูลผู้เข้าทดสอบ</h2>
             <div class="space-y-4">
                 <div>
-                    <label class="block text-sm font-medium text-slate-300 mb-1">ชื่อ-นามสกุล</label>
-                    <input type="text" id="user-name" placeholder="เช่น ด.ช.สมชาย ดีใจ" class="w-full bg-slate-900 border border-slate-600 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-cyan-500 font-bold">
+                    <label class="block text-sm font-bold text-cyan-300 mb-1">ชื่อ-นามสกุล</label>
+                    <input type="text" id="user-name" placeholder="เช่น ด.ช.สมชาย ดีใจ" class="w-full bg-slate-950 border border-slate-700 focus:border-amber-400 rounded-lg px-4 py-2.5 text-white focus:outline-none font-bold transition">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-slate-300 mb-1">ชั้นเรียน / ห้อง</label>
-                    <input type="text" id="user-class" placeholder="เช่น ม.3/1" class="w-full bg-slate-900 border border-slate-600 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-cyan-500 font-bold">
+                    <label class="block text-sm font-bold text-cyan-300 mb-1">ชั้นเรียน / ห้อง</label>
+                    <input type="text" id="user-class" placeholder="เช่น ม.3/1" class="w-full bg-slate-950 border border-slate-700 focus:border-amber-400 rounded-lg px-4 py-2.5 text-white focus:outline-none font-bold transition">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-slate-300 mb-1">สีประจำกลุ่ม / สีเสือ</label>
-                    <select id="user-color" class="w-full bg-slate-900 border border-slate-600 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-cyan-500 font-bold">
+                    <label class="block text-sm font-bold text-cyan-300 mb-1">สีประจำกลุ่ม / สีเสือ</label>
+                    <select id="user-color" class="w-full bg-slate-950 border border-slate-700 focus:border-amber-400 rounded-lg px-4 py-2.5 text-white focus:outline-none font-bold transition">
                         <option value="purple">สีม่วง 🟣 (SHARK)</option>
                         <option value="orange">สีส้ม 🟠 (TIGER)</option>
                         <option value="pink">สีชมพู 🌸 (EAGLE)</option>
                     </select>
                 </div>
-                <button onclick="startApp()" class="w-full mt-6 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg transform active:scale-95 transition cursor-pointer">
+                <button onclick="startApp()" class="w-full mt-6 bg-gradient-to-r from-cyan-500 via-blue-600 to-amber-500 hover:from-cyan-400 hover:to-amber-400 text-slate-950 font-black py-3 px-4 rounded-lg shadow-xl transform active:scale-95 transition cursor-pointer text-lg tracking-wide">
                     เข้าสู่หน้าทดสอบ
                 </button>
             </div>
@@ -57,56 +58,57 @@
         <div id="main-section" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-8">
             
             <div class="lg:col-span-2 space-y-6">
-                <div class="bg-slate-800/90 border border-slate-700/80 backdrop-blur-md rounded-2xl p-6 shadow-xl">
+                <div class="bg-slate-900/95 border border-cyan-500/30 backdrop-blur-md rounded-2xl p-6 shadow-xl">
                     <div class="flex flex-wrap justify-between items-center gap-4 mb-6">
                         <div>
-                            <span id="current-user-badge" class="bg-slate-900 text-cyan-400 text-sm font-bold px-4 py-1.5 rounded-full border border-slate-700 shadow-inner">
+                            <span id="current-user-badge" class="bg-slate-950 text-amber-400 text-sm font-black px-4 py-1.5 rounded-full border border-cyan-500/30 shadow-inner">
                                 ผู้ทดสอบ: -
                             </span>
                         </div>
-                        <div class="bg-slate-900 px-4 py-1.5 border border-slate-700 rounded-xl text-sm font-bold text-cyan-400">
+                        <div class="bg-blue-950 px-4 py-1.5 border border-blue-700 rounded-xl text-sm font-black text-cyan-400 shadow-md">
                             🤸‍♂️ โหมดกระโดดตบ (Jumping Jacks)
                         </div>
                     </div>
 
-                    <div class="relative bg-black rounded-xl overflow-hidden aspect-video border-2 border-slate-600 shadow-2xl flex items-center justify-center">
+                    <div class="relative bg-black rounded-xl overflow-hidden aspect-video border-2 border-slate-700 shadow-2xl flex items-center justify-center">
                         <video id="webcam" class="hidden" autoplay playsinline></video>
                         <canvas id="output_canvas" class="w-full h-full object-cover transform -scale-x-100"></canvas>
                         
-                        <div id="countdown-overlay" class="hidden absolute inset-0 bg-slate-950/85 items-center justify-center text-8xl font-black text-cyan-400 animate-pulse">
+                        <div id="countdown-overlay" class="hidden absolute inset-0 bg-slate-950/90 items-center justify-center text-9xl font-black text-amber-400 animate-bounce">
                             3
                         </div>
                     </div>
 
                     <div class="grid grid-cols-3 gap-4 mt-6 text-center">
-                        <div class="bg-slate-950/60 p-4 border border-slate-700/80 rounded-xl">
-                            <p class="text-xs text-slate-400 uppercase tracking-wider font-bold">เวลาที่เหลือ</p>
-                            <p id="timer" class="text-3xl font-black text-amber-400 mt-1">30s</p>
+                        <div class="bg-slate-950/80 p-4 border border-blue-900 rounded-xl shadow-inner">
+                            <p class="text-xs text-cyan-400 uppercase tracking-wider font-bold">เวลาที่เหลือ</p>
+                            <p id="timer" class="text-4xl font-black text-amber-400 mt-1">30s</p>
                         </div>
-                        <div class="bg-slate-950/60 p-4 border border-slate-700/80 rounded-xl">
-                            <p class="text-xs text-slate-400 uppercase tracking-wider font-bold">คะแนน (ครั้ง)</p>
-                            <p id="score" class="text-3xl font-black text-emerald-400 mt-1">0</p>
+                        <div class="bg-slate-950/80 p-4 border border-blue-900 rounded-xl shadow-inner">
+                            <p class="text-xs text-cyan-400 uppercase tracking-wider font-bold">คะแนน (ครั้ง)</p>
+                            <p id="score" class="text-4xl font-black text-yellow-300 mt-1">0</p>
                         </div>
                         <div class="flex flex-col justify-center gap-2">
-                            <button id="btn-start" onclick="startTimer()" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold py-2 px-3 text-sm rounded-lg shadow-md cursor-pointer transition transform active:scale-95">
+                            <button id="btn-start" onclick="startTimer()" class="bg-amber-400 hover:bg-yellow-300 text-slate-950 font-black py-2.5 px-3 text-sm rounded-lg shadow-lg cursor-pointer transition transform active:scale-95 border-b-4 border-amber-600">
                                 ▶️ เริ่มจับเวลา
                             </button>
-                            <button id="btn-save" onclick="saveScore()" disabled class="bg-slate-700 text-slate-400 font-bold py-2 px-3 text-sm rounded-lg opacity-50 cursor-not-allowed transition">
+                            <button id="btn-save" onclick="saveScore()" disabled class="bg-slate-800 text-slate-500 font-bold py-2.5 px-3 text-sm rounded-lg opacity-50 cursor-not-allowed transition">
                                 💾 บันทึกคะแนน
                             </button>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-slate-800/90 border border-slate-700/80 backdrop-blur-md rounded-2xl p-6 shadow-xl">
-                    <div class="flex justify-between items-center mb-4">
+                <div class="bg-slate-900/90 border border-slate-800 backdrop-blur-md rounded-2xl p-6 shadow-xl">
+                    <div class="flex justify-between items-center mb-4 border-b border-slate-800 pb-2">
                         <h3 class="text-xl font-bold text-white flex items-center gap-2">
                             📋 ประวัติการทดสอบระบบสถิติ
                         </h3>
+                        <span id="sheet-status" class="text-xs font-bold text-cyan-400 bg-slate-950 px-3 py-1 rounded-full border border-blue-900 shadow-inner">📊 ระบบชีตออนไลน์: สแตนด์บาย</span>
                     </div>
                     <div class="overflow-x-auto max-h-60">
                         <table class="w-full text-left text-sm">
-                            <thead class="bg-slate-900 text-slate-400 uppercase text-xs border-b border-slate-700 sticky top-0">
+                            <thead class="bg-slate-950 text-cyan-400 uppercase text-xs border-b border-slate-800 sticky top-0">
                                 <tr>
                                     <th class="px-4 py-3">วันที่</th>
                                     <th class="px-4 py-3">ชื่อ / ชั้น</th>
@@ -115,28 +117,28 @@
                                     <th class="px-4 py-3 text-right">คะแนน</th>
                                 </tr>
                             </thead>
-                            <tbody id="history-table-body" class="divide-y divide-slate-700/50"></tbody>
+                            <tbody id="history-table-body" class="divide-y divide-slate-800/60"></tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
             <div class="space-y-6">
-                <div class="bg-slate-800/90 border border-slate-700/80 backdrop-blur-md rounded-2xl p-6 shadow-xl">
-                    <h3 class="text-xl font-bold mb-4 text-white">📊 คะแนนรวมแยกตามสี</h3>
+                <div class="bg-slate-900/90 border border-blue-950 backdrop-blur-md rounded-2xl p-6 shadow-xl">
+                    <h3 class="text-xl font-bold mb-4 text-amber-400">📊 คะแนนรวมแยกตามสี</h3>
                     <div class="relative h-64">
                         <canvas id="colorChart"></canvas>
                     </div>
                 </div>
 
-                <div class="bg-slate-800/90 border border-slate-700/80 backdrop-blur-md rounded-2xl p-6 shadow-xl">
-                    <h3 class="text-xl font-bold mb-3 text-white">🤖 ผลการวิเคราะห์ข้อมูลสมรรถภาพ</h3>
-                    <div id="ai-analysis" class="text-sm text-slate-300 space-y-2 bg-slate-900/60 border border-slate-700/60 p-4 rounded-xl leading-relaxed">
+                <div class="bg-slate-900/90 border border-blue-950 backdrop-blur-md rounded-2xl p-6 shadow-xl">
+                    <h3 class="text-xl font-bold mb-3 text-cyan-400">🤖 ผลการวิเคราะห์ข้อมูลสมรรถภาพ</h3>
+                    <div id="ai-analysis" class="text-sm text-slate-300 space-y-2 bg-slate-950 border border-slate-800 p-4 rounded-xl leading-relaxed">
                         ไม่มีข้อมูลเพียงพอสำหรับการวิเคราะห์ กรุณาทำการทดสอบและบันทึกคะแนน
                     </div>
                 </div>
                 
-                <button onclick="backToSetup()" class="w-full bg-slate-700 hover:bg-slate-600 text-white font-semibold py-2.5 px-4 rounded-lg text-sm shadow transition cursor-pointer text-center block transform active:scale-95">
+                <button onclick="backToSetup()" class="w-full bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700 font-bold py-2.5 px-4 rounded-lg text-sm shadow transition cursor-pointer text-center block transform active:scale-95">
                     🔄 เปลี่ยนผู้เข้าทดสอบ
                 </button>
             </div>
@@ -147,7 +149,10 @@
     <audio id="beep-sound" src="https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg" preload="auto"></audio>
 
     <script>
-        // --- ประกาศตัวแปร Global คุมระบบ ---
+        // --- ส่วนเชื่อมต่อ GOOGLE FORMS / SHEETS WEB APP ---
+        // 🔴 นำลิงก์ Web App URL ของคุณมาวางแทนข้อความนี้เหมือนเดิมเลยครับ
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw6NK4o8QnbHCJDNBN95-ZwQYeR5Bf9UicU1sEZ4p3BNORMhY6M1FdZ2-DOa6ENSldl3A/exec'; 
+
         let currentUser = { name: '', class: '', color: '' };
         let score = 0;
         let timeLeft = 30;
@@ -166,7 +171,6 @@
             pink: { text: 'ชมพู', hex: '#ec4899', bg: 'bg-pink-500/20 text-pink-400 border-pink-500/30' }
         };
 
-        // --- ฟังก์ชันเริ่มเข้าสู่ระบบแอป ---
         function startApp() {
             const name = document.getElementById('user-name').value.trim();
             const textClass = document.getElementById('user-class').value.trim();
@@ -194,7 +198,6 @@
             stopTimer();
         }
 
-        // --- ระบบตั้งเวลา สเตตัสการเล่น ---
         function startTimer() {
             if (isTesting) return;
             
@@ -204,7 +207,7 @@
             document.getElementById('score').innerText = score;
             document.getElementById('timer').innerText = timeLeft + "s";
             document.getElementById('btn-save').disabled = true;
-            document.getElementById('btn-save').className = "bg-slate-700 text-slate-400 font-bold py-2 px-3 text-sm rounded-lg opacity-50 cursor-not-allowed transition";
+            document.getElementById('btn-save').className = "bg-slate-800 text-slate-500 font-bold py-2.5 px-3 text-sm rounded-lg opacity-50 cursor-not-allowed transition";
 
             const overlay = document.getElementById('countdown-overlay');
             overlay.classList.remove('hidden');
@@ -246,10 +249,9 @@
             document.getElementById('btn-start').classList.remove('opacity-50');
             
             document.getElementById('btn-save').disabled = false;
-            document.getElementById('btn-save').className = "bg-gradient-to-r from-emerald-400 to-green-500 hover:from-emerald-500 hover:to-green-600 text-slate-950 font-bold py-2 px-3 text-sm rounded-lg shadow-md cursor-pointer transition transform active:scale-95";
+            document.getElementById('btn-save').className = "bg-gradient-to-r from-emerald-400 to-green-500 hover:from-emerald-500 hover:to-green-600 text-slate-950 font-black py-2.5 px-3 text-sm rounded-lg shadow-md cursor-pointer transition transform active:scale-95 border-b-4 border-green-700";
         }
 
-        // --- LOGIC AI COMPUTER VISION (MediaPipe Pose ความแม่นยำสูง) ---
         function initCamera() {
             if (window.cameraInitialized) return;
 
@@ -289,7 +291,6 @@
             if (results.poseLandmarks) {
                 const landmarks = results.poseLandmarks;
 
-                // แมปพิกัดข้อต่อของกระโดดตบ
                 const leftWrist = landmarks[15];
                 const rightWrist = landmarks[16];
                 const leftEar = landmarks[7];
@@ -301,12 +302,10 @@
                 const leftShoulder = landmarks[11];
                 const rightShoulder = landmarks[12];
 
-                // วาดโครงกระดูกเลเซอร์เชื่อมต่ออวัยวะ
                 drawSkeleton(canvasCtx, landmarks);
                 drawKeypoints(canvasCtx, [leftWrist, rightWrist, leftShoulder, rightShoulder]);
 
                 if (isTesting) {
-                    // === ลอจิกกระโดดตบ (Jumping Jacks) เสถียรสูง แม่นยำ ===
                     if (leftWrist.visibility > 0.3 || rightWrist.visibility > 0.3) {
                         const handsAboveEars = (leftWrist.y < leftEar.y) || (rightWrist.y < rightEar.y);
                         
@@ -331,7 +330,7 @@
             canvasCtx.restore();
         }
 
-        // ฟังก์ชันวาดเส้นโครงกระดูกสไตล์วิทยาศาสตร์การกีฬา
+        // วาดโครงกระดูกนีออนสีน้ำเงินทองให้แมตช์ธีม
         function drawSkeleton(ctx, landmarks) {
             const connections = [
                 [11, 12], [11, 13], [13, 15], [12, 14], [14, 16], 
@@ -345,7 +344,8 @@
                     ctx.beginPath();
                     ctx.moveTo(ptA.x * canvasElement.width, ptA.y * canvasElement.height);
                     ctx.lineTo(ptB.x * canvasElement.width, ptB.y * canvasElement.height);
-                    ctx.strokeStyle = 'rgba(34, 211, 238, 0.6)';
+                    // ปรับสีเส้นเลเซอร์เป็นสีน้ำเงินนีออน
+                    ctx.strokeStyle = 'rgba(14, 165, 233, 0.7)';
                     ctx.lineWidth = 4;
                     ctx.stroke();
                 }
@@ -357,15 +357,15 @@
                 if(pt && pt.visibility > 0.4) {
                     ctx.beginPath();
                     ctx.arc(pt.x * canvasElement.width, pt.y * canvasElement.height, 7, 0, 2 * Math.PI);
-                    ctx.fillStyle = '#ec4899';
-                    ctx.shadowBlur = 8;
-                    ctx.shadowColor = '#ec4899';
+                    // ปรับจุดข้อต่อเป็นสีเหลืองทองเรืองแสง
+                    ctx.fillStyle = '#f59e0b';
+                    ctx.shadowBlur = 10;
+                    ctx.shadowColor = '#f59e0b';
                     ctx.fill();
                 }
             });
         }
 
-        // --- ระบบบันทึกข้อมูลและวิเคราะห์ผลสถิติ ---
         function saveScore() {
             if(score === 0) {
                 alert("กรุณาทำการทดสอบให้ได้คะแนนมากกว่า 0 ครั้งก่อนบันทึกครับ");
@@ -387,29 +387,56 @@
             localStorage.setItem('fitness_history', JSON.stringify(history));
             
             document.getElementById('btn-save').disabled = true;
-            document.getElementById('btn-save').className = "bg-slate-700 text-slate-400 font-bold py-2 px-3 text-sm rounded-lg opacity-50 cursor-not-allowed transition";
+            document.getElementById('btn-save').className = "bg-slate-800 text-slate-500 font-bold py-2.5 px-3 text-sm rounded-lg opacity-50 cursor-not-allowed transition";
             
             updateDashboard();
-            alert("บันทึกคะแนนสมรรถภาพเรียบร้อยแล้ว! 💯");
+            sendToSheets(record);
+        }
+
+        function sendToSheets(record) {
+            if (!SCRIPT_URL || SCRIPT_URL === 'YOUR_WEB_APP_URL') {
+                console.log("ยังไม่ได้ตั้งค่า Web App URL สำหรับ Google Sheets");
+                alert("บันทึกคะแนนในเครื่องเรียบร้อย! (ยังไม่ได้เปิดระบบชีตออนไลน์)");
+                return;
+            }
+
+            const statusText = document.getElementById('sheet-status');
+            statusText.innerText = "⏳ กำลังซิงค์ไป Google Sheet...";
+            statusText.className = "text-xs font-bold text-amber-400 animate-pulse";
+
+            const urlWithParams = `${SCRIPT_URL}?date=${encodeURIComponent(record.date)}&name=${encodeURIComponent(record.name)}&class=${encodeURIComponent(record.class)}&color=${encodeURIComponent(colorMap[record.color].text)}&mode=${encodeURIComponent(record.mode)}&score=${record.score}`;
+
+            fetch(urlWithParams, { method: 'GET', mode: 'cors' })
+                .then(response => {
+                    statusText.innerText = "✅ ซิงค์ Google Sheet สำเร็จ!";
+                    statusText.className = "text-xs font-bold text-emerald-400";
+                    alert("บันทึกคะแนนและส่งข้อมูลเข้า Google Sheets สำเร็จแล้ว! 💯");
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    statusText.innerText = "❌ ซิงค์ข้อมูลผิดพลาด";
+                    statusText.className = "text-xs font-bold text-rose-400";
+                    alert("บันทึกข้อมูลในเครื่องสำเร็จ แต่ไม่สามารถส่งไป Google Sheet ได้");
+                });
         }
 
         function updateDashboard() {
             const history = JSON.parse(localStorage.getItem('fitness_history')) || [];
             const tbody = document.getElementById('history-table-body');
-            tbody.innerHTML = history.length === 0 ? `<tr><td colspan="5" class="text-center py-6 text-slate-500">ยังไม่มีข้อมูลการบันทึก</td></tr>` : '';
+            tbody.innerHTML = history.length === 0 ? `<tr><td colspan="5" class="text-center py-6 text-slate-500 font-bold">ยังไม่มีข้อมูลการบันทึก</td></tr>` : '';
             
             [...history].reverse().forEach(item => {
                 const badgeStyle = colorMap[item.color]?.bg || '';
                 const colorText = colorMap[item.color]?.text || item.color;
                 
                 const tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-700/40 transition text-slate-300 border-b border-slate-800";
+                tr.className = "hover:bg-blue-950/40 transition text-slate-300 border-b border-slate-800/80";
                 tr.innerHTML = `
                     <td class="px-4 py-3 text-xs text-slate-400">${item.date}</td>
-                    <td class="px-4 py-3 font-medium text-white">${item.name} <span class="text-xs text-slate-400">(${item.class})</span></td>
+                    <td class="px-4 py-3 font-bold text-white">${item.name} <span class="text-xs text-slate-400 font-normal">(${item.class})</span></td>
                     <td class="px-4 py-3"><span class="text-xs px-2.5 py-0.5 rounded-full border ${badgeStyle}">${colorText}</span></td>
-                    <td class="px-4 py-3 text-xs font-semibold text-slate-200">${item.mode}</td>
-                    <td class="px-4 py-3 text-right font-black text-cyan-400">${item.score}</td>
+                    <td class="px-4 py-3 text-xs font-bold text-slate-300">${item.mode}</td>
+                    <td class="px-4 py-3 text-right font-black text-amber-400">${item.score}</td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -441,14 +468,14 @@
             ['purple', 'orange', 'pink'].forEach(col => {
                 const total = colorSums[col];
                 if (total > 0) {
-                    analysisText += `<li><strong class="text-white">สี${colorMap[col].text}:</strong> มีความคล่องตัวและการประสานร่างกายที่ดีในท่ากระโดดตบ <span class="text-slate-400">(รวมสะสม ${total} ครั้ง)</span></li>`;
+                    analysisText += `<li><strong class="text-white">สี${colorMap[col].text}:</strong> มีความคล่องตัวดีเยี่ยมในท่ากระโดดตบ <span class="text-amber-300 font-bold">(รวมสะสม ${total} ครั้ง)</span></li>`;
                 }
             });
             analysisText += `</ul>`;
             analysisBox.innerHTML = analysisText;
         }
 
-        // --- แผนภูมิวิเคราะห์ผลกราฟแท่ง ---
+        // ปรับสีกราฟแท่งให้โมเดิร์นเข้ากับโทนน้ำเงินเหลือง
         function initChart() {
             if (colorChart) return;
             const ctx = document.getElementById('colorChart').getContext('2d');
@@ -459,10 +486,10 @@
                     datasets: [{
                         label: 'คะแนนรวมทั้งหมด (ครั้ง)',
                         data: [0, 0, 0],
-                        backgroundColor: ['rgba(168, 85, 247, 0.65)', 'rgba(249, 115, 22, 0.65)', 'rgba(236, 72, 153, 0.65)'],
+                        backgroundColor: ['rgba(168, 85, 247, 0.7)', 'rgba(249, 115, 22, 0.7)', 'rgba(236, 72, 153, 0.7)'],
                         borderColor: ['#a855f7', '#f97316', '#ec4899'],
                         borderWidth: 2,
-                        borderRadius: 8
+                        borderRadius: 6
                     }]
                 },
                 options: {
@@ -472,7 +499,7 @@
                     scales: {
                         y: {
                             beginAtZero: true,
-                            grid: { color: 'rgba(255, 255, 255, 0.08)' },
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
                             ticks: { color: '#94a3b8', font: { weight: 'bold' } }
                         },
                         x: {
