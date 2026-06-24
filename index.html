@@ -12,9 +12,9 @@
     @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;700&display=swap');
     body {
       margin: 0; padding: 0; font-family: 'Kanit', sans-serif;
-      /* ระบบจะดึงรูปชื่อ bg.png ที่อยู่ใน GitHub โฟลเดอร์เดียวกันมาแสดงซ้อนกับมิตินีออนมืด */
-      background: linear-gradient(135deg, rgba(20, 0, 40, 0.85) 0%, rgba(43, 0, 79, 0.85) 50%, rgba(74, 0, 64, 0.85) 100%), 
-                  url('bg.png');
+      /* ลอจิกพิเศษ: เรียกหาพื้นหลังทุกนามสกุลยอดนิยมพร้อมกันเพื่อป้องกันปัญหาเข้ารหัสหัวไฟล์ผิดพลาด */
+      background: linear-gradient(135deg, rgba(20, 0, 40, 0.82) 0%, rgba(43, 0, 79, 0.85) 50%, rgba(74, 0, 64, 0.82) 100%), 
+                  url('bg.png'), url('bg.jpg'), url('bg.jpeg'), url('bg.webp');
       background-size: cover; background-repeat: no-repeat;
       background-attachment: fixed; background-position: center; color: #fff; 
       display: flex; justify-content: center; align-items: center; min-height: 100vh;
@@ -104,7 +104,6 @@
 </div>
 
 <script>
-  // 🔴 นำลิงก์ Web App URL จาก Google Apps Script มาใส่ในช่องนี้เหมือนเดิมครับ
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw6NK4o8QnbHCJDNBN95-ZwQYeR5Bf9UicU1sEZ4p3BNORMhY6M1FdZ2-DOa6ENSldl3A/exec";
 
   let video, poseNet, poses = [], score = 0, timeLeft = 20;
