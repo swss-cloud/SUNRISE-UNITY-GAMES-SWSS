@@ -1,313 +1,567 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <title>SUNRISE UNITY GAMES SWSS</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js"></script>
-  <script src="https://unpkg.com/ml5@0.12.2/dist/ml5.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;700&display=swap');
-    body {
-      margin: 0; padding: 0; font-family: 'Kanit', sans-serif;
-      background: linear-gradient(135deg, rgba(20, 0, 40, 0.82) 0%, rgba(43, 0, 79, 0.85) 50%, rgba(74, 0, 64, 0.82) 100%), 
-                  url('bg.png'), url('bg.jpg'), url('bg.jpeg'), url('bg.webp');
-      background-size: cover; background-repeat: no-repeat;
-      background-attachment: fixed; background-position: center; color: #fff; 
-      display: flex; justify-content: center; align-items: center; min-height: 100vh;
-    }
-    .overlay {
-      background: rgba(15, 3, 25, 0.9); border-radius: 24px; padding: 35px; width: 92%; max-width: 950px;
-      box-shadow: 0 0 40px rgba(230, 126, 34, 0.3), 0 0 40px rgba(142, 68, 173, 0.3);
-      text-align: center; border: 2px solid rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px);
-    }
-    h1 {
-      font-size: 2.8rem; font-weight: 700; text-transform: uppercase; margin: 0;
-      background: linear-gradient(45deg, #ff7e5f, #feb47b, #ff007f, #7f00ff);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.5));
-    }
-    h2 { margin-top: 5px; color: #00ffff; font-size: 1.3rem; letter-spacing: 2px; }
-    .form-group { margin: 25px 0; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
-    input, select, button { padding: 14px 24px; font-size: 1rem; border-radius: 30px; border: none; outline: none; font-family: 'Kanit', sans-serif; }
-    input, select { background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.3); font-weight: bold; transition: 0.3s; }
-    input::placeholder { color: rgba(255,255,255,0.6); }
-    input:focus, select:focus { background: rgba(255,255,255,0.25); border-color: #00ffff; }
-    select option { background: #1a0033; color: #fff; }
-    button { background: linear-gradient(45deg, #ff007f, #e67e22); color: white; cursor: pointer; font-weight: bold; transition: 0.3s; box-shadow: 0 4px 15px rgba(255,0,127,0.4); }
-    button:hover { transform: translateY(-2px); box-shadow: 0 6px 25px rgba(255,0,127,0.7); }
-    button:disabled { background: #555; cursor: not-allowed; box-shadow: none; transform: none; }
-    #game-container { display: none; margin-top: 20px; }
-    #canvas-holder { display: flex; justify-content: center; position: relative; margin-bottom: 15px; border-radius: 20px; overflow: hidden; border: 4px solid rgba(255,255,255,0.8); box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
-    .stats-bar { display: flex; justify-content: space-around; font-size: 1.6rem; font-weight: bold; background: rgba(0,0,0,0.7); padding: 15px; border-radius: 15px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.1); }
-    .dashboard { margin-top: 35px; background: rgba(255,255,255,0.05); padding: 25px; border-radius: 20px; text-align: left; border: 1px solid rgba(255,255,255,0.1); }
-    .chart-container { position: relative; height: 280px; width: 100%; margin-top: 20px; }
-    .color-box { display: inline-block; padding: 6px 18px; border-radius: 20px; margin: 5px; font-weight: bold; font-size: 1.1rem; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-    .purple { background: #8e44ad; border: 1px solid #9b59b6; }
-    .orange { background: #d35400; border: 1px solid #e67e22; }
-    .pink { background: #c0392b; border: 1px solid #e74c3c; }
-    #loading-ai { color: #ffeb3b; font-weight: bold; margin: 15px 0; font-size: 1.1rem; }
-    #ai-status { background: rgba(0,0,0,0.6); padding: 8px; border-radius: 8px; font-size: 1.1rem; font-weight: bold; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Fitness Fitness Testing System</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js" crossorigin="anonymous"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;700&display=swap');
+        body {
+            font-family: 'Kanit', sans-serif;
+            /* ดึงภาพพื้นหลัง bg.png มาผสมผสานกับธีมมืดของ Tailwind */
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(30, 41, 59, 0.9) 100%), 
+                        url('bg.png'), url('bg.jpg'), url('bg.jpeg'), url('bg.webp');
+            background-size: cover; background-repeat: no-repeat;
+            background-attachment: fixed; background-position: center;
+        }
+    </style>
 </head>
-<body>
+<body class="text-slate-100 min-h-screen">
 
-<div class="overlay">
-  <h1>SUNRISE UNITY GAMES</h1>
-  <h2>SWSS - AI JUMPING JACK FITNESS TEST</h2>
-  <hr style="border: 0; height: 1px; background: linear-gradient(to right, transparent, #ff00ff, transparent); margin: 15px 0;">
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+        <header class="text-center mb-10">
+            <h1 class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 mb-2 drop-shadow-md">
+                AI Fitness Tracker
+            </h1>
+            <p class="text-slate-300 font-medium">ระบบทดสอบสมรรถภาพทางกายด้วยปัญญาประดิษฐ์ - SWSS</p>
+        </header>
 
-  <div id="setup-screen">
-    <h3 style="font-weight: 300; margin-bottom: 10px;">กรอกข้อมูลผู้รับการทดสอบสมรรถภาพ</h3>
-    <div class="form-group">
-      <input type="text" id="username" placeholder="ชื่อ - นามสกุล" required>
-      <input type="text" id="usergrade" placeholder="ชั้นเรียน (เช่น ม.5/2)" required>
-      <select id="usercolor">
-        <option value="ม่วง">สีม่วง (SHARK)</option>
-        <option value="ส้ม">สีส้ม (TIGER)</option>
-        <option value="ชมพู">สีชมพู (EAGLE)</option>
-      </select>
+        <div id="setup-section" class="max-w-md mx-auto bg-slate-800/95 border border-slate-700/70 backdrop-blur-md rounded-2xl p-8 shadow-2xl">
+            <h2 class="text-2xl font-bold mb-6 text-center text-white">ข้อมูลผู้เข้าทดสอบ</h2>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">ชื่อ-นามสกุล</label>
+                    <input type="text" id="user-name" placeholder="เช่น ด.ช.สมชาย ดีใจ" class="w-full bg-slate-900 border border-slate-600 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-cyan-500 font-bold">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">ชั้นเรียน / ห้อง</label>
+                    <input type="text" id="user-class" placeholder="เช่น ม.3/1" class="w-full bg-slate-900 border border-slate-600 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-cyan-500 font-bold">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">สีประจำกลุ่ม / สีเสือ</label>
+                    <select id="user-color" class="w-full bg-slate-900 border border-slate-600 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-cyan-500 font-bold">
+                        <option value="purple">สีม่วง 🟣 (SHARK)</option>
+                        <option value="orange">สีส้ม 🟠 (TIGER)</option>
+                        <option value="pink">สีชมพู 🌸 (EAGLE)</option>
+                    </select>
+                </div>
+                <button onclick="startApp()" class="w-full mt-6 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg transform active:scale-95 transition cursor-pointer">
+                    เข้าสู่หน้าทดสอบ
+                </button>
+            </div>
+        </div>
+
+        <div id="main-section" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <div class="lg:col-span-2 space-y-6">
+                <div class="bg-slate-800/90 border border-slate-700/80 backdrop-blur-md rounded-2xl p-6 shadow-xl">
+                    <div class="flex flex-wrap justify-between items-center gap-4 mb-6">
+                        <div>
+                            <span id="current-user-badge" class="bg-slate-900 text-cyan-400 text-sm font-bold px-4 py-1.5 rounded-full border border-slate-700 shadow-inner">
+                                ผู้ทดสอบ: -
+                            </span>
+                        </div>
+                        <div class="flex bg-slate-900 p-1 border border-slate-700 rounded-xl">
+                            <button id="mode-run" onclick="setMode('run')" class="px-4 py-2 rounded-lg text-sm font-bold bg-cyan-500 text-slate-900 cursor-pointer transition">
+                                🏃‍♂️ วิ่งกับที่
+                            </button>
+                            <button id="mode-jumping" onclick="setMode('jumping')" class="px-4 py-2 rounded-lg text-sm font-bold text-slate-400 hover:text-white cursor-pointer transition">
+                                🤸‍♂️ กระโดดตบ
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="relative bg-black rounded-xl overflow-hidden aspect-video border-2 border-slate-600 shadow-2xl flex items-center justify-center">
+                        <video id="webcam" class="hidden" autoplay playsinline></video>
+                        <canvas id="output_canvas" class="w-full h-full object-cover transform -scale-x-100"></canvas>
+                        
+                        <div id="countdown-overlay" class="hidden absolute inset-0 bg-slate-950/85 items-center justify-center text-8xl font-black text-cyan-400 animate-pulse">
+                            3
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-4 mt-6 text-center">
+                        <div class="bg-slate-950/60 p-4 border border-slate-700/80 rounded-xl">
+                            <p class="text-xs text-slate-400 uppercase tracking-wider font-bold">เวลาที่เหลือ</p>
+                            <p id="timer" class="text-3xl font-black text-amber-400 mt-1">30s</p>
+                        </div>
+                        <div class="bg-slate-950/60 p-4 border border-slate-700/80 rounded-xl">
+                            <p class="text-xs text-slate-400 uppercase tracking-wider font-bold">คะแนน (ครั้ง)</p>
+                            <p id="score" class="text-3xl font-black text-emerald-400 mt-1">0</p>
+                        </div>
+                        <div class="flex flex-col justify-center gap-2">
+                            <button id="btn-start" onclick="startTimer()" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold py-2 px-3 text-sm rounded-lg shadow-md cursor-pointer transition transform active:scale-95">
+                                ▶️ เริ่มจับเวลา
+                            </button>
+                            <button id="btn-save" onclick="saveScore()" disabled class="bg-slate-700 text-slate-400 font-bold py-2 px-3 text-sm rounded-lg opacity-50 cursor-not-allowed transition">
+                                💾 บันทึกคะแนน
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-800/90 border border-slate-700/80 backdrop-blur-md rounded-2xl p-6 shadow-xl">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                            📋 ประวัติการทดสอบระบบสถิติ
+                        </h3>
+                        <button onclick="clearAllData()" class="text-xs text-rose-400 hover:text-rose-300 font-medium border border-rose-500/30 hover:border-rose-500/60 px-2.5 py-1 rounded-lg transition cursor-pointer">
+                            🗑️ ล้างข้อมูลทั้งหมด
+                        </button>
+                    </div>
+                    <div class="overflow-x-auto max-h-60">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-slate-900 text-slate-400 uppercase text-xs border-b border-slate-700 sticky top-0">
+                                <tr>
+                                    <th class="px-4 py-3">วันที่</th>
+                                    <th class="px-4 py-3">ชื่อ / ชั้น</th>
+                                    <th class="px-4 py-3">สี</th>
+                                    <th class="px-4 py-3">ประเภท</th>
+                                    <th class="px-4 py-3 text-right">คะแนน</th>
+                                </tr>
+                            </thead>
+                            <tbody id="history-table-body" class="divide-y divide-slate-700/50"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <div class="bg-slate-800/90 border border-slate-700/80 backdrop-blur-md rounded-2xl p-6 shadow-xl">
+                    <h3 class="text-xl font-bold mb-4 text-white">📊 คะแนนรวมแยกตามสี</h3>
+                    <div class="relative h-64">
+                        <canvas id="colorChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="bg-slate-800/90 border border-slate-700/80 backdrop-blur-md rounded-2xl p-6 shadow-xl">
+                    <h3 class="text-xl font-bold mb-3 text-white">🤖 ผลการวิเคราะห์ข้อมูลสมรรถภาพ</h3>
+                    <div id="ai-analysis" class="text-sm text-slate-300 space-y-2 bg-slate-900/60 border border-slate-700/60 p-4 rounded-xl leading-relaxed">
+                        ไม่มีข้อมูลเพียงพอสำหรับการวิเคราะห์ กรุณาทำการทดสอบและบันทึกคะแนน
+                    </div>
+                </div>
+                
+                <button onclick="backToSetup()" class="w-full bg-slate-700 hover:bg-slate-600 text-white font-semibold py-2.5 px-4 rounded-lg text-sm shadow transition cursor-pointer text-center block transform active:scale-95">
+                    🔄 เปลี่ยนผู้เข้าทดสอบ
+                </button>
+            </div>
+
+        </div>
     </div>
-    <div id="loading-ai">กำลังเปิดใช้งาน AI ตรวจจับท่าทางกายภาพ...</div>
-    <button id="start-btn" onclick="initGame()" disabled>เริ่มการทดสอบจับเวลา (20 วินาที)</button>
-  </div>
 
-  <div id="game-container">
-    <div class="stats-bar">
-      <div style="color: #ff3366; text-shadow: 0 0 10px rgba(255,51,102,0.5);">⏳ เวลาเหลือ: <span id="timer">20</span> วินาที</div>
-      <div style="color: #00ffff; text-shadow: 0 0 10px rgba(0,255,255,0.5);">🔥 จำนวนครั้ง: <span id="score-counter">0</span> ครั้ง</div>
-    </div>
-    <div id="canvas-holder"></div>
-    <p id="ai-status" style="color: #ffeb3b;">สถานะท่าทาง: กำลังตรวจจับ...</p>
-  </div>
+    <audio id="beep-sound" src="https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg" preload="auto"></audio>
 
-  <div class="dashboard">
-    <h3 style="text-align: center; margin-top: 0; font-size: 1.4rem; color: #fff; letter-spacing: 1px;">📊 บทวิเคราะห์คะแนนรวมและสถิติรายวัน</h3>
-    <div style="text-align: center; margin-bottom: 15px;" id="total-blocks">
-      คะแนนรวมปัจจุบันสะสมแยกตามสี:
-      <span class="color-box purple">สีม่วง: <span id="total-purple">0</span> คะแนน</span>
-      <span class="color-box orange">สีส้ม: <span id="total-orange">0</span> คะแนน</span>
-      <span class="color-box pink">สีชมพู: <span id="total-pink">0</span> คะแนน</span>
-    </div>
-    
-    <div class="chart-container">
-      <canvas id="analyticsChart"></canvas>
-    </div>
+    <script>
+        // --- 1. ประกาศตัวแปร Global คุมระบบ ---
+        let currentUser = { name: '', class: '', color: '' };
+        let currentMode = 'run'; 
+        let score = 0;
+        let timeLeft = 30;
+        let timerInterval = null;
+        let isTesting = false;
+        let poseState = 'neutral'; 
 
-    <div style="text-align: center; margin-top: 25px;">
-      <button onclick="generatePDFReport()" style="background: linear-gradient(45deg, #27ae60, #2ecc71); box-shadow: 0 4px 15px rgba(46,204,113,0.4);">📄 ดาวน์โหลดรายงานสถิติสมรรถภาพ (PDF)</button>
-    </div>
-  </div>
-</div>
+        const videoElement = document.getElementById('webcam');
+        const canvasElement = document.getElementById('output_canvas');
+        const canvasCtx = canvasElement.getContext('2d');
+        let colorChart = null;
 
-<script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw6NK4o8QnbHCJDNBN95-ZwQYeR5Bf9UicU1sEZ4p3BNORMhY6M1FdZ2-DOa6ENSldl3A/exec";
+        const colorMap = {
+            purple: { text: 'ม่วง', hex: '#a855f7', bg: 'bg-purple-500/20 text-purple-400 border-purple-500/30' },
+            orange: { text: 'ส้ม', hex: '#f97316', bg: 'bg-orange-500/20 text-orange-400 border-orange-500/30' },
+            pink: { text: 'ชมพู', hex: '#ec4899', bg: 'bg-pink-500/20 text-pink-400 border-pink-500/30' }
+        };
 
-  let video, poseNet, poses = [], score = 0, timeLeft = 20;
-  let isPlaying = false, timerInterval, myChart, cachedData = null;
-  let state = "DOWN"; 
+        // --- 2. ฟังก์ชันเริ่มเข้าสู่ระบบแอป ---
+        function startApp() {
+            const name = document.getElementById('user-name').value.trim();
+            const textClass = document.getElementById('user-class').value.trim();
+            const color = document.getElementById('user-color').value;
 
-  function setup() {
-    let canvas = createCanvas(640, 480);
-    canvas.parent('canvas-holder');
-    video = createCapture(VIDEO);
-    video.size(width, height);
-    
-    let options = { flipHorizontal: true, detectionType: 'single' };
-    poseNet = ml5.poseNet(video, options, modelReady);
-    poseNet.on('pose', function(results) { poses = results; });
-    video.hide();
-  }
+            if(!name || !textClass) {
+                alert('กรุณากรอกชื่อและชั้นเรียนก่อนเริ่มต้นทดสอบครับ 📋');
+                return;
+            }
 
-  function modelReady() {
-    document.getElementById('loading-ai').style.color = '#2ecc71';
-    document.getElementById('loading-ai').innerText = "⚡ ระบบ AI ตรวจโครงสร้างทางกายภาพพร้อมใช้งาน!";
-    document.getElementById('start-btn').disabled = false;
-    updateAnalytics();
-  }
+            currentUser = { name, class: textClass, color };
+            document.getElementById('current-user-badge').innerText = `ผู้ทดสอบ: ${name} (${textClass}) - สี${colorMap[color].text}`;
 
-  function draw() {
-    translate(width, 0); scale(-1, 1);
-    image(video, 0, 0, width, height);
-    if (isPlaying) { 
-      drawKeypoints(); 
-      checkJumpingJack(); 
-    }
-  }
+            document.getElementById('setup-section').classList.add('hidden');
+            document.getElementById('main-section').classList.remove('hidden');
 
-  function drawKeypoints() {
-    if (poses.length > 0) {
-      let pose = poses[0].pose;
-      let parts = ['leftEye', 'rightEye', 'leftShoulder', 'rightShoulder', 'leftWrist', 'rightWrist'];
-      parts.forEach(part => {
-        let keypoint = pose[part];
-        if (keypoint && keypoint.score > 0.1) {
-          fill(0, 255, 255); noStroke();
-          ellipse(keypoint.x, keypoint.y, 12, 12);
+            initCamera();
+            initChart();
+            updateDashboard();
         }
-      });
-    }
-  }
 
-  function checkJumpingJack() {
-    if (poses.length > 0) {
-      let pose = poses[0].pose;
-      let leftWrist = pose.leftWrist;
-      let rightWrist = pose.rightWrist;
-      let leftEye = pose.leftEye;
-      let rightEye = pose.rightEye;
-      let leftShoulder = pose.leftShoulder;
-      let rightShoulder = pose.rightShoulder;
-
-      // เพิ่มระบบดักจับพิกัดแบบยืดหยุ่นสูง (ลดเกณฑ์ score เหลือ 0.1 ป้องกันภาพเบลอขณะกระโดด)
-      if ((leftWrist.score > 0.1 || rightWrist.score > 0.1) && (leftEye.score > 0.1 || rightEye.score > 0.1)) {
-        
-        // จังหวะ UP: แขนข้างใดข้างหนึ่งขึ้นไปสูงกว่าระดับตา/หู (แกน Y ด้านบนค่าน้อยกว่า)
-        if (leftWrist.y < leftEye.y || rightWrist.y < rightEye.y || leftWrist.y < rightEye.y || rightWrist.y < leftEye.y) {
-          if (state === "DOWN") {
-            state = "UP";
-            document.getElementById('ai-status').innerText = "สถานะท่าทาง: ยกมือสุด (UP) ⬆️";
-            document.getElementById('ai-status').style.color = "#00ffff";
-          }
-        } 
-        // จังหวะ DOWN: แขนทั้งสองข้างลดระดับลงมาต่ำกว่าระดับไหล่ (แกน Y ด้านล่างค่ามากกว่า)
-        else if (leftWrist.y > leftShoulder.y && rightWrist.y > rightShoulder.y) {
-          if (state === "UP") {
-            score++;
-            state = "DOWN";
-            document.getElementById('score-counter').innerText = score;
-            document.getElementById('ai-status').innerText = "สถานะท่าทาง: นับคะแนนสำเร็จ! (DOWN) ⬇️";
-            document.getElementById('ai-status').style.color = "#2ecc71";
-          }
+        function backToSetup() {
+            document.getElementById('setup-section').classList.remove('hidden');
+            document.getElementById('main-section').classList.add('hidden');
+            stopTimer();
         }
-      }
-    }
-  }
 
-  function initGame() {
-    let name = document.getElementById('username').value.trim();
-    let grade = document.getElementById('usergrade').value.trim();
-    if(!name || !grade) { alert("กรุณาระบุข้อมูลชื่อและชั้นเรียนก่อนเข้าทดสอบครับ"); return; }
+        // --- 3. ฟังก์ชันควบคุมโหมดกิฬาทดสอบ ---
+        function setMode(mode) {
+            if(isTesting) return; 
+            currentMode = mode;
+            score = 0;
+            poseState = 'neutral';
+            document.getElementById('score').innerText = score;
+            
+            const btnRun = document.getElementById('mode-run');
+            const btnJumping = document.getElementById('mode-jumping');
 
-    document.getElementById('setup-screen').style.display = 'none';
-    document.getElementById('game-container').style.display = 'block';
-    
-    score = 0; timeLeft = 20; isPlaying = true; state = "DOWN";
-    document.getElementById('score-counter').innerText = score;
-    document.getElementById('timer').innerText = timeLeft;
-
-    timerInterval = setInterval(() => {
-      timeLeft--;
-      document.getElementById('timer').innerText = timeLeft;
-      if (timeLeft <= 0) { endGame(); }
-    }, 1000);
-  }
-
-  function endGame() {
-    isPlaying = false; clearInterval(timerInterval);
-    alert(`📢 การทดสอบสิ้นสุดลง! คุณทำสถิติกระโดดตบได้: ${score} ครั้ง`);
-
-    let name = document.getElementById('username').value;
-    let grade = document.getElementById('usergrade').value;
-    let color = document.getElementById('usercolor').value;
-
-    document.getElementById('ai-status').innerText = "🔄 ระบบกำลังเชื่อมต่อเพื่อเข้ารหัสและบันทึกคะแนนถาวร...";
-    
-    fetch(SCRIPT_URL, {
-      method: "POST",
-      mode: "no-cors",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: name, grade: grade, color: color, score: score })
-    }).then(() => {
-       alert("🔒 บันทึกคะแนนสำเร็จเรียบร้อยแล้ว!");
-       document.getElementById('ai-status').innerText = "บันทึกข้อมูลเรียบร้อย!";
-       document.getElementById('setup-screen').style.display = 'block';
-       document.getElementById('game-container').style.display = 'none';
-       document.getElementById('username').value = "";
-       setTimeout(updateAnalytics, 1500);
-    }).catch(err => {
-       console.error(err);
-       updateAnalytics();
-    });
-  }
-
-  function updateAnalytics() {
-    fetch(SCRIPT_URL)
-    .then(res => res.json())
-    .then(data => {
-      cachedData = data;
-      document.getElementById('total-purple').innerText = data.colorTotals["ม่วง"];
-      document.getElementById('total-orange').innerText = data.colorTotals["ส้ม"];
-      document.getElementById('total-pink').innerText = data.colorTotals["ชมพู"];
-      
-      let dates = Object.keys(data.dailyScores).sort();
-      let purpleScores = dates.map(d => data.dailyScores[d]["ม่วง"]);
-      let orangeScores = dates.map(d => data.dailyScores[d]["ส้ม"]);
-      let pinkScores = dates.map(d => data.dailyScores[d]["ชมพู"]);
-
-      if (myChart) { myChart.destroy(); }
-      
-      let ctx = document.getElementById('analyticsChart').getContext('2d');
-      myChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: dates,
-          datasets: [
-            { label: 'สีม่วง (SHARK)', data: purpleScores, backgroundColor: '#8e44ad' },
-            { label: 'สีส้ม (TIGER)', data: orangeScores, backgroundColor: '#d35400' },
-            { label: 'สีชมพู (EAGLE)', data: pinkScores, backgroundColor: '#c0392b' }
-          ]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          scales: {
-            y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#fff' } },
-            x: { ticks: { color: '#fff' } }
-          },
-          plugins: { legend: { labels: { color: '#fff' } } }
+            if(mode === 'run') {
+                btnRun.className = "px-4 py-2 rounded-lg text-sm font-bold bg-cyan-500 text-slate-900 cursor-pointer transition";
+                btnJumping.className = "px-4 py-2 rounded-lg text-sm font-bold text-slate-400 hover:text-white cursor-pointer transition";
+            } else {
+                btnJumping.className = "px-4 py-2 rounded-lg text-sm font-bold bg-cyan-500 text-slate-900 cursor-pointer transition";
+                btnRun.className = "px-4 py-2 rounded-lg text-sm font-bold text-slate-400 hover:text-white cursor-pointer transition";
+            }
         }
-      });
-    }).catch(e => console.log("กำลังดึงฐานข้อมูลสถิติ...", e));
-  }
 
-  function generatePDFReport() {
-    if (!cachedData) { alert("ระบบกำลังประมวลผลข้อมูลสถิติ กรุณารอสักครู่"); return; }
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF('p', 'mm', 'a4');
+        // --- 4. ระบบตั้งเวลา สเตตัสการเล่น ---
+        function startTimer() {
+            if (isTesting) return;
+            
+            score = 0;
+            timeLeft = 30;
+            poseState = 'neutral';
+            document.getElementById('score').innerText = score;
+            document.getElementById('timer').innerText = timeLeft + "s";
+            document.getElementById('btn-save').disabled = true;
+            document.getElementById('btn-save').className = "bg-slate-700 text-slate-400 font-bold py-2 px-3 text-sm rounded-lg opacity-50 cursor-not-allowed transition";
 
-    doc.setFillColor(26, 0, 51); doc.rect(0, 0, 210, 40, 'F');
-    doc.setTextColor(255, 255, 255); doc.setFontSize(20);
-    doc.text("SUNRISE UNITY GAMES SWSS", 15, 18); doc.setFontSize(11);
-    doc.text("OFFICIAL PHYSICAL FITNESS TEST REPORT (AI JUMPING JACKS)", 15, 28);
-    
-    doc.setTextColor(33, 33, 33); doc.setFontSize(14);
-    doc.text("SUMMARY OF CURRENT TOTAL SCORES", 15, 52);
-    doc.setFontSize(11);
-    doc.text(`- PURPLE COLOR (SHARK): ${cachedData.colorTotals["ม่วง"]} Points`, 20, 62);
-    doc.text(`- ORANGE COLOR (TIGER): ${cachedData.colorTotals["ส้ม"]} Points`, 20, 70);
-    doc.text(`- PINK COLOR (EAGLE): ${cachedData.colorTotals["ชมพู"]} Points`, 20, 78);
+            const overlay = document.getElementById('countdown-overlay');
+            overlay.classList.remove('hidden');
+            overlay.classList.add('flex');
+            let readyTime = 3;
+            overlay.innerText = readyTime;
 
-    doc.setFontSize(14); doc.text("CHRONOLOGICAL PARTICIPATION LOG", 15, 92);
+            let readyInterval = setInterval(() => {
+                readyTime--;
+                if(readyTime > 0) {
+                    overlay.innerText = readyTime;
+                } else {
+                    clearInterval(readyInterval);
+                    overlay.classList.add('hidden');
+                    overlay.classList.remove('flex');
+                    
+                    isTesting = true;
+                    document.getElementById('btn-start').disabled = true;
+                    document.getElementById('btn-start').classList.add('opacity-50');
 
-    let tableRows = [];
-    cachedData.rawRows.forEach(row => {
-      let dateFormatted = (row[0] instanceof Date) ? row[0].toLocaleString() : row[0];
-      tableRows.push([dateFormatted, row[1], row[2], row[3], row[4]]);
-    });
+                    timerInterval = setInterval(() => {
+                        timeLeft--;
+                        document.getElementById('timer').innerText = timeLeft + "s";
+                        
+                        if(timeLeft <= 0) {
+                            stopTimer();
+                            document.getElementById('beep-sound').play().catch(e => console.log("Audio deferred"));
+                            alert(`หมดเวลาทดสอบ! คุณทำไปได้ทั้งหมด ${score} ครั้ง 🎉`);
+                        }
+                    }, 1000);
+                }
+            }, 1000);
+        }
 
-    doc.autoTable({
-      startY: 98,
-      head: [['Timestamp', 'Full Name', 'Class/Grade', 'Team Color', 'Jacks Count']],
-      body: tableRows,
-      theme: 'striped',
-      headStyles: { fillBox: true, fillColor: [142, 68, 173] },
-      styles: { fontSize: 10 }
-    });
+        function stopTimer() {
+            clearInterval(timerInterval);
+            isTesting = false;
+            document.getElementById('btn-start').disabled = false;
+            document.getElementById('btn-start').classList.remove('opacity-50');
+            
+            document.getElementById('btn-save').disabled = false;
+            document.getElementById('btn-save').className = "bg-gradient-to-r from-emerald-400 to-green-500 hover:from-emerald-500 hover:to-green-600 text-slate-950 font-bold py-2 px-3 text-sm rounded-lg shadow-md cursor-pointer transition transform active:scale-95";
+        }
 
-    doc.save("SUNRISE_UNITY_GAMES_SWSS_REPORT.pdf");
-  }
-</script>
+        // --- 5. LOGIC AI COMPUTER VISION (MediaPipe Pose ความแม่นยำสูง) ---
+        function initCamera() {
+            if (window.cameraInitialized) return;
+
+            const pose = new Pose({
+                locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`
+            });
+
+            pose.setOptions({
+                modelComplexity: 1,
+                smoothLandmarks: true,
+                enableSegmentation: false,
+                minDetectionConfidence: 0.5,
+                minTrackingConfidence: 0.5
+            });
+
+            pose.onResults(onPoseResults);
+
+            const camera = new Camera(videoElement, {
+                onFrame: async () => {
+                    await pose.send({ image: videoElement });
+                },
+                width: 640,
+                height: 480
+            });
+            camera.start();
+            window.cameraInitialized = true;
+        }
+
+        function onPoseResults(results) {
+            canvasElement.width = results.image.width;
+            canvasElement.height = results.image.height;
+
+            canvasCtx.save();
+            canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+            canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
+
+            if (results.poseLandmarks) {
+                const landmarks = results.poseLandmarks;
+
+                // แก้ไขบั๊กเรียกชื่อตัวแปรและขยายจุดสแกนให้ตรวจจับโครงกระดูกครบส่วน
+                const leftWrist = landmarks[15];
+                const rightWrist = landmarks[16];
+                const leftEar = landmarks[7];
+                const rightEar = landmarks[8];
+                const leftHip = landmarks[23];
+                const rightHip = landmarks[24];
+                const leftKnee = landmarks[25];
+                const rightKnee = landmarks[26];
+                const leftAnkle = landmarks[27];
+                const rightAnkle = landmarks[28];
+                const leftShoulder = landmarks[11];
+                const rightShoulder = landmarks[12];
+
+                // วาดโครงกระดูกไฮเทคเชื่อมข้อมือ แขน ขา สะโพก ทั้งหมดลงหน้าจอเพื่อตรวจเช็กระยะยืน
+                drawSkeleton(canvasCtx, landmarks, results.poseLandmarks);
+                drawKeypoints(canvasCtx, [leftWrist, rightWrist, leftKnee, rightKnee, leftShoulder, rightShoulder]);
+
+                if (isTesting) {
+                    if (currentMode === 'run') {
+                        // === ลอจิกวิ่งกับที่ (High Knees) ปรับปรุงความไว ===
+                        if (leftKnee.visibility > 0.4 || rightKnee.visibility > 0.4) {
+                            const hipYThreshold = (leftHip.y + rightHip.y) / 2;
+                            // ขยับค่า Offset เล็กน้อยให้จับความสูงเข่าง่ายขึ้นสำหรับเด็กเล็ก
+                            if (leftKnee.y < (hipYThreshold + 0.02) || rightKnee.y < (hipYThreshold + 0.02)) {
+                                if (poseState === 'neutral') {
+                                    score++;
+                                    document.getElementById('score').innerText = score;
+                                    poseState = 'knee-up'; 
+                                }
+                            } else if (leftKnee.y > (hipYThreshold + 0.08) && rightKnee.y > (hipYThreshold + 0.08)) {
+                                poseState = 'neutral';
+                            }
+                        }
+
+                    } else if (currentMode === 'jumping') {
+                        // === ลอจิกกระโดดตบ (Jumping Jacks) เสถียรสูง แก้อาการนับยาก ===
+                        if (leftWrist.visibility > 0.3 || rightWrist.visibility > 0.3) {
+                            // 1. เช็กมือยกพ้นระดับหู (ใช้ได้ทั้งสองฝั่งอย่างยืดหยุ่น ป้องกันมุมกล้องหลุด)
+                            const handsAboveEars = (leftWrist.y < leftEar.y) || (rightWrist.y < rightEar.y);
+                            
+                            // 2. เช็กขากางกว้างกว่าสะโพก (คูณ 1.3 เพื่อให้กางขาปกติก็ตรวจจับได้ ไม่ต้องถ่างกว้างเกินไป)
+                            const hipDistance = Math.abs(leftHip.x - rightHip.x);
+                            const ankleDistance = Math.abs(leftAnkle.x - rightAnkle.x);
+                            const legsSpread = ankleDistance > (hipDistance * 1.3);
+
+                            if (handsAboveEars && legsSpread) {
+                                if (poseState === 'neutral') {
+                                    poseState = 'expanded'; 
+                                }
+                            } else if (!handsAboveEars && (leftWrist.y > leftShoulder.y && rightWrist.y > rightShoulder.y)) {
+                                // ดึงมือลงมาต่ำกว่าไหล่ รวบขาตามเดิม นับคะแนนทันทีสมบูรณ์แบบ
+                                if (poseState === 'expanded') {
+                                    score++;
+                                    document.getElementById('score').innerText = score;
+                                    poseState = 'neutral';
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            canvasCtx.restore();
+        }
+
+        // ฟังก์ชันวาดเส้นโครงกระดูกเลเซอร์สีฟ้าโยงทั้งตัวสไตล์วิทยาศาสตร์การกีฬา
+        function drawSkeleton(ctx, landmarks) {
+            const connections = [
+                [11, 12], [11, 13], [13, 15], [12, 14], [14, 16], // แขนบน-ล่าง
+                [11, 23], [12, 24], [23, 24],                     // ลำตัว-สะโพก
+                [23, 25], [25, 27], [24, 26], [26, 28]              // ขา-ข้อเท้า
+            ];
+            connections.forEach(([i, j]) => {
+                const ptA = landmarks[i];
+                const ptB = landmarks[j];
+                if (ptA && ptB && ptA.visibility > 0.4 && ptB.visibility > 0.4) {
+                    ctx.beginPath();
+                    ctx.moveTo(ptA.x * canvasElement.width, ptA.y * canvasElement.height);
+                    ctx.lineTo(ptB.x * canvasElement.width, ptB.y * canvasElement.height);
+                    ctx.strokeStyle = 'rgba(34, 211, 238, 0.6)';
+                    ctx.lineWidth = 4;
+                    ctx.stroke();
+                }
+            });
+        }
+
+        function drawKeypoints(ctx, points) {
+            points.forEach(pt => {
+                if(pt && pt.visibility > 0.4) {
+                    ctx.beginPath();
+                    ctx.arc(pt.x * canvasElement.width, pt.y * canvasElement.height, 7, 0, 2 * Math.PI);
+                    ctx.fillStyle = '#ec4899';
+                    ctx.shadowBlur = 8;
+                    ctx.shadowColor = '#ec4899';
+                    ctx.fill();
+                }
+            });
+        }
+
+        // --- 6. ระบบบันทึกข้อมูลและวิเคราะห์ผลสถิติ ---
+        function saveScore() {
+            if(score === 0) {
+                alert("กรุณาทำการทดสอบให้ได้คะแนนมากกว่า 0 ครั้งก่อนบันทึกครับ");
+                return;
+            }
+
+            const history = JSON.parse(localStorage.getItem('fitness_history')) || [];
+            const record = {
+                id: Date.now(),
+                name: currentUser.name,
+                class: currentUser.class,
+                color: currentUser.color,
+                mode: currentMode === 'run' ? 'วิ่งกับที่' : 'กระโดดตบ',
+                score: score,
+                date: new Date().toLocaleDateString('th-TH')
+            };
+
+            history.push(record);
+            localStorage.setItem('fitness_history', JSON.stringify(history));
+            
+            document.getElementById('btn-save').disabled = true;
+            document.getElementById('btn-save').className = "bg-slate-700 text-slate-400 font-bold py-2 px-3 text-sm rounded-lg opacity-50 cursor-not-allowed transition";
+            
+            updateDashboard();
+            alert("บันทึกคะแนนสมรรถภาพเรียบร้อยแล้ว! 💯");
+        }
+
+        function updateDashboard() {
+            const history = JSON.parse(localStorage.getItem('fitness_history')) || [];
+            const tbody = document.getElementById('history-table-body');
+            tbody.innerHTML = history.length === 0 ? `<tr><td colspan="5" class="text-center py-6 text-slate-500">ยังไม่มีข้อมูลการบันทึก</td></tr>` : '';
+            
+            [...history].reverse().forEach(item => {
+                const badgeStyle = colorMap[item.color]?.bg || '';
+                const colorText = colorMap[item.color]?.text || item.color;
+                
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-700/40 transition text-slate-300 border-b border-slate-800";
+                tr.innerHTML = `
+                    <td class="px-4 py-3 text-xs text-slate-400">${item.date}</td>
+                    <td class="px-4 py-3 font-medium text-white">${item.name} <span class="text-xs text-slate-400">(${item.class})</span></td>
+                    <td class="px-4 py-3"><span class="text-xs px-2.5 py-0.5 rounded-full border ${badgeStyle}">${colorText}</span></td>
+                    <td class="px-4 py-3 text-xs font-semibold text-slate-200">${item.mode}</td>
+                    <td class="px-4 py-3 text-right font-black text-cyan-400">${item.score}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            const colorSums = { purple: 0, orange: 0, pink: 0 };
+            const modeDetails = {
+                purple: { run: 0, jumping: 0 },
+                orange: { run: 0, jumping: 0 },
+                pink: { run: 0, jumping: 0 }
+            };
+
+            history.forEach(item => {
+                if (colorSums[item.color] !== undefined) {
+                    colorSums[item.color] += item.score;
+                    const modeKey = item.mode === 'วิ่งกับที่' ? 'run' : 'jumping';
+                    modeDetails[item.color][modeKey] += item.score;
+                }
+            });
+
+            if (colorChart) {
+                colorChart.data.datasets[0].data = [colorSums.purple, colorSums.orange, colorSums.pink];
+                colorChart.update();
+            }
+
+            const analysisBox = document.getElementById('ai-analysis');
+            if (history.length === 0) {
+                analysisBox.innerHTML = "ไม่มีข้อมูลเพียงพอสำหรับการวิเคราะห์ กรุณาทำการทดสอบและบันทึกคะแนน";
+                return;
+            }
+
+            let highestColor = 'purple';
+            if (colorSums.orange > colorSums[highestColor]) highestColor = 'orange';
+            if (colorSums.pink > colorSums[highestColor]) highestColor = 'pink';
+
+            let analysisText = `<p class="font-bold text-emerald-400 mb-1 flex items-center gap-1">🔥 ผู้นำปัจจุบัน: ทีมสี${colorMap[highestColor].text} (${colorSums[highestColor]} ครั้ง)</p>`;
+            analysisText += `<ul class="list-disc pl-4 space-y-1 mt-2 text-slate-300 text-xs">`;
+            ['purple', 'orange', 'pink'].forEach(col => {
+                const total = colorSums[col];
+                const runScore = modeDetails[col].run;
+                const jumpScore = modeDetails[col].jumping;
+                
+                if (total > 0) {
+                    let trait = "";
+                    if (runScore > jumpScore * 1.25) {
+                        trait = "โดดเด่นด้านความทนทานจากวิ่งกับที่ แต่อัตรากระโดดตบยังพัฒนาได้อีก";
+                    } else if (jumpScore > runScore * 1.25) {
+                        trait = "มีความคล่องตัวและการสอดประสานร่างกายดีเยี่ยมจากคะแนนกระโดดตบสูง";
+                    } else {
+                        trait = "มีสมรรถภาพร่างกายที่สมดุลดีเยี่ยมทั้งความอึดและความยืดหยุ่น";
+                    }
+                    analysisText += `<li><strong class="text-white">สี${colorMap[col].text}:</strong> ${trait} <span class="text-slate-400">(วิ่ง ${runScore} | โดด ${jumpScore})</span></li>`;
+                }
+            });
+            analysisText += `</ul>`;
+            analysisBox.innerHTML = analysisText;
+        }
+
+        // --- 7. แผนภูมิวิเคราะห์ผลกราฟแท่ง ---
+        function initChart() {
+            if (colorChart) return;
+            const ctx = document.getElementById('colorChart').getContext('2d');
+            colorChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['สีม่วง 🟣', 'สีส้ม 🟠', 'สีชมพู 🌸'],
+                    datasets: [{
+                        label: 'คะแนนรวมทั้งหมด (ครั้ง)',
+                        data: [0, 0, 0],
+                        backgroundColor: ['rgba(168, 85, 247, 0.65)', 'rgba(249, 115, 22, 0.65)', 'rgba(236, 72, 153, 0.65)'],
+                        borderColor: ['#a855f7', '#f97316', '#ec4899'],
+                        borderWidth: 2,
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(255, 255, 255, 0.08)' },
+                            ticks: { color: '#94a3b8', font: { weight: 'bold' } }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#f1f5f9', font: { size: 12, weight: 'bold' } }
+                        }
+                    }
+                }
+            });
+        }
+
+        function clearAllData() {
+            if(confirm("คุณต้องการลบสถิติผลการทดสอบทั้งหมดใช่หรือไม่? ข้อมูลจะไม่สามารถกู้คืนได้")) {
+                localStorage.removeItem('fitness_history');
+                updateDashboard();
+            }
+        }
+    </script>
 </body>
 </html>
