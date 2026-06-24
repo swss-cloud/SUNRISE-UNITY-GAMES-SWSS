@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <title>SUNRISE UNITY GAMES SWSS</title>
-  <!-- โหลด Library สำหรับ AI, กราฟ และระบบสร้าง PDF คุณภาพสูง -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js"></script>
   <script src="https://unpkg.com/ml5@0.12.2/dist/ml5.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -13,11 +12,12 @@
     @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;700&display=swap');
     body {
       margin: 0; padding: 0; font-family: 'Kanit', sans-serif;
-      /* พื้นหลังมูดบอร์ดอ้างอิงจากรูปภาพ 06e3c495-95ad-418d-a79c-203a9c02060e (1).png */
-      background: linear-gradient(135deg, #140028 0%, #2b004f 50%, #4a0040 100%), 
-                  url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1964&auto=format&fit=crop');
-      background-blend-mode: color-dodge; background-size: cover; background-repeat: no-repeat;
-      background-attachment: fixed; color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh;
+      /* ระบบจะดึงรูปชื่อ bg.png ที่อยู่ใน GitHub โฟลเดอร์เดียวกันมาแสดงซ้อนกับมิตินีออนมืด */
+      background: linear-gradient(135deg, rgba(20, 0, 40, 0.85) 0%, rgba(43, 0, 79, 0.85) 50%, rgba(74, 0, 64, 0.85) 100%), 
+                  url('bg.png');
+      background-size: cover; background-repeat: no-repeat;
+      background-attachment: fixed; background-position: center; color: #fff; 
+      display: flex; justify-content: center; align-items: center; min-height: 100vh;
     }
     .overlay {
       background: rgba(15, 3, 25, 0.9); border-radius: 24px; padding: 35px; width: 92%; max-width: 950px;
@@ -50,18 +50,16 @@
     .orange { background: #d35400; border: 1px solid #e67e22; }
     .pink { background: #c0392b; border: 1px solid #e74c3c; }
     #loading-ai { color: #ffeb3b; font-weight: bold; margin: 15px 0; font-size: 1.1rem; }
-    #ai-status { background: rgba(0,0,0,0.6); padding: 8px; border-radius: 8px; font-size: 0.95rem; }
+    #ai-status { background: rgba(0,0,0,0.6); padding: 8px; border-radius: 8px; font-size: 1.1rem; font-weight: bold; }
   </style>
 </head>
 <body>
 
 <div class="overlay">
-  <!-- โลโก้ชื่องานตามมูดบอร์ดเสือ ฉลาม และนกอินทรี -->
   <h1>SUNRISE UNITY GAMES</h1>
   <h2>SWSS - AI JUMPING JACK FITNESS TEST</h2>
   <hr style="border: 0; height: 1px; background: linear-gradient(to right, transparent, #ff00ff, transparent); margin: 15px 0;">
 
-  <!-- ฟอร์มลงชื่อเข้าทดสอบ -->
   <div id="setup-screen">
     <h3 style="font-weight: 300; margin-bottom: 10px;">กรอกข้อมูลผู้รับการทดสอบสมรรถภาพ</h3>
     <div class="form-group">
@@ -77,17 +75,15 @@
     <button id="start-btn" onclick="initGame()" disabled>เริ่มการทดสอบจับเวลา (20 วินาที)</button>
   </div>
 
-  <!-- หน้าจอสำหรับเปิดกล้องและทดสอบท่าทาง -->
   <div id="game-container">
     <div class="stats-bar">
       <div style="color: #ff3366; text-shadow: 0 0 10px rgba(255,51,102,0.5);">⏳ เวลาเหลือ: <span id="timer">20</span> วินาที</div>
       <div style="color: #00ffff; text-shadow: 0 0 10px rgba(0,255,255,0.5);">🔥 จำนวนครั้ง: <span id="score-counter">0</span> ครั้ง</div>
     </div>
     <div id="canvas-holder"></div>
-    <p id="ai-status">คำแนะนำ: ยืนเว้นระยะห่างให้กล้องเว็บแคมเห็นสรีระช่วงบนหรือเต็มตัวอย่างชัดเจน</p>
+    <p id="ai-status" style="color: #ffeb3b;">สถานะท่าทาง: กำลังตรวจจับ...</p>
   </div>
 
-  <!-- แดชบอร์ดสรุปคะแนนสดและวิเคราะห์ผลเชิงเปรียบเทียบ -->
   <div class="dashboard">
     <h3 style="text-align: center; margin-top: 0; font-size: 1.4rem; color: #fff; letter-spacing: 1px;">📊 บทวิเคราะห์คะแนนรวมและสถิติรายวัน</h3>
     <div style="text-align: center; margin-bottom: 15px;" id="total-blocks">
@@ -101,7 +97,6 @@
       <canvas id="analyticsChart"></canvas>
     </div>
 
-    <!-- ปุ่มดาวน์โหลดรายงานเป็นไฟล์ PDF ทางการ -->
     <div style="text-align: center; margin-top: 25px;">
       <button onclick="generatePDFReport()" style="background: linear-gradient(45deg, #27ae60, #2ecc71); box-shadow: 0 4px 15px rgba(46,204,113,0.4);">📄 ดาวน์โหลดรายงานสถิติสมรรถภาพ (PDF)</button>
     </div>
@@ -109,19 +104,21 @@
 </div>
 
 <script>
-  // 🔴 นำลิงก์ Web App URL จาก Google Apps Script มาใส่ในช่องนี้
+  // 🔴 นำลิงก์ Web App URL จาก Google Apps Script มาใส่ในช่องนี้เหมือนเดิมครับ
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw6NK4o8QnbHCJDNBN95-ZwQYeR5Bf9UicU1sEZ4p3BNORMhY6M1FdZ2-DOa6ENSldl3A/exec";
 
   let video, poseNet, poses = [], score = 0, timeLeft = 20;
   let isPlaying = false, timerInterval, myChart, cachedData = null;
-  let handsUp = false;
+  let state = "DOWN"; 
 
   function setup() {
     let canvas = createCanvas(640, 480);
     canvas.parent('canvas-holder');
     video = createCapture(VIDEO);
     video.size(width, height);
-    poseNet = ml5.poseNet(video, modelReady);
+    
+    let options = { flipHorizontal: true, detectionType: 'single' };
+    poseNet = ml5.poseNet(video, options, modelReady);
     poseNet.on('pose', function(results) { poses = results; });
     video.hide();
   }
@@ -134,40 +131,53 @@
   }
 
   function draw() {
-    translate(width, 0); scale(-1, 1); // Mirror Effect
+    translate(width, 0); scale(-1, 1);
     image(video, 0, 0, width, height);
-    if (isPlaying) { drawKeypoints(); checkJumpingJack(); }
+    if (isPlaying) { 
+      drawKeypoints(); 
+      checkJumpingJack(); 
+    }
   }
 
   function drawKeypoints() {
-    for (let i = 0; i < poses.length; i++) {
-      let pose = poses[i].pose;
-      for (let j = 0; j < pose.keypoints.length; j++) {
-        let keypoint = pose.keypoints[j];
-        if (keypoint.score > 0.5) {
-          fill(0, 255, 255); noStroke(); ellipse(keypoint.position.x, keypoint.position.y, 8, 8);
+    if (poses.length > 0) {
+      let pose = poses[0].pose;
+      let parts = ['leftEye', 'rightEye', 'leftShoulder', 'rightShoulder', 'leftWrist', 'rightWrist'];
+      parts.forEach(part => {
+        let keypoint = pose[part];
+        if (keypoint && keypoint.score > 0.3) {
+          fill(0, 255, 255); noStroke();
+          ellipse(keypoint.x, keypoint.y, 12, 12);
         }
-      }
+      });
     }
   }
 
   function checkJumpingJack() {
     if (poses.length > 0) {
       let pose = poses[0].pose;
-      let leftWrist = pose.leftWrist; let rightWrist = pose.rightWrist;
-      let leftEye = pose.leftEye; let rightEye = pose.rightEye;
+      let leftWrist = pose.leftWrist;
+      let rightWrist = pose.rightWrist;
+      let leftEye = pose.leftEye;
+      let rightEye = pose.rightEye;
+      let leftShoulder = pose.leftShoulder;
+      let rightShoulder = pose.rightShoulder;
 
-      if (leftWrist.score > 0.5 && rightWrist.score > 0.5) {
-        // เงื่อนไข AI: ข้อมือสองข้างยกสูงกว่าระดับสายตา
-        if (leftWrist.y < leftEye.y && rightWrist.y < rightEye.y) {
-          handsUp = true;
+      if (leftWrist.score > 0.2 && rightWrist.score > 0.2 && leftEye.score > 0.2) {
+        if (leftWrist.y < leftEye.y || rightWrist.y < rightEye.y) {
+          if (state === "DOWN") {
+            state = "UP";
+            document.getElementById('ai-status').innerText = "สถานะท่าทาง: ยกมือสุด (UP) ⬆️";
+            document.getElementById('ai-status').style.color = "#00ffff";
+          }
         } 
-        // เมื่อดึงมือกลับลงมาต่ำกว่าระดับสายตา = นับคะแนนสำเร็จ 1 ครั้ง
-        else if (leftWrist.y > leftEye.y && rightWrist.y > rightEye.y) {
-          if (handsUp) {
+        else if (leftWrist.y > leftShoulder.y && rightWrist.y > rightShoulder.y) {
+          if (state === "UP") {
             score++;
+            state = "DOWN";
             document.getElementById('score-counter').innerText = score;
-            handsUp = false;
+            document.getElementById('ai-status').innerText = "สถานะท่าทาง: นับคะแนนสำเร็จ! (DOWN) ⬇️";
+            document.getElementById('ai-status').style.color = "#2ecc71";
           }
         }
       }
@@ -182,7 +192,7 @@
     document.getElementById('setup-screen').style.display = 'none';
     document.getElementById('game-container').style.display = 'block';
     
-    score = 0; timeLeft = 20; isPlaying = true;
+    score = 0; timeLeft = 20; isPlaying = true; state = "DOWN";
     document.getElementById('score-counter').innerText = score;
     document.getElementById('timer').innerText = timeLeft;
 
@@ -209,8 +219,8 @@
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name: name, grade: grade, color: color, score: score })
     }).then(() => {
-       alert("🔒 บันทึกคะแนนเข้าสู่ฐานข้อมูลส่วนกลางสำเร็จแล้ว! (ข้อมูลถูกจัดเก็บแบบ Locked ป้องกันการลบหรือแก้ไข)");
-       document.getElementById('ai-status').innerText = "บันทึกข้อมูลสมบูรณ์!";
+       alert("🔒 บันทึกคะแนนสำเร็จเรียบร้อยแล้ว!");
+       document.getElementById('ai-status').innerText = "บันทึกข้อมูลเรียบร้อย!";
        document.getElementById('setup-screen').style.display = 'block';
        document.getElementById('game-container').style.display = 'none';
        document.getElementById('username').value = "";
@@ -225,7 +235,7 @@
     fetch(SCRIPT_URL)
     .then(res => res.json())
     .then(data => {
-      cachedData = data; // เก็บข้อมูลสดเอาไว้ใช้สร้าง PDF
+      cachedData = data;
       document.getElementById('total-purple').innerText = data.colorTotals["ม่วง"];
       document.getElementById('total-orange').innerText = data.colorTotals["ส้ม"];
       document.getElementById('total-pink').innerText = data.colorTotals["ชมพู"];
@@ -260,40 +270,27 @@
     }).catch(e => console.log("กำลังดึงฐานข้อมูลสถิติ...", e));
   }
 
-  // ฟังก์ชันดาวน์โหลดรายงานวิเคราะห์ออกมาเป็นไฟล์ PDF อย่างเป็นทางการ
   function generatePDFReport() {
-    if (!cachedData) { alert("ระบบกำลังประมวลผลข้อมูลสถิติ กรุณารอสักครู่แล้วกดใหม่อีกครั้ง"); return; }
-    
+    if (!cachedData) { alert("ระบบกำลังประมวลผลข้อมูลสถิติ กรุณารอสักครู่"); return; }
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF('p', 'mm', 'a4');
 
-    // ตกแต่งหัวข้อเอกสาร PDF
-    doc.setFillColor(26, 0, 51);
-    doc.rect(0, 0, 210, 40, 'F');
-    
-    doc.setTextColor(255, 255, 255);
-    doc.setFontSize(20);
-    doc.text("SUNRISE UNITY GAMES SWSS", 15, 18);
-    doc.setFontSize(11);
+    doc.setFillColor(26, 0, 51); doc.rect(0, 0, 210, 40, 'F');
+    doc.setTextColor(255, 255, 255); doc.setFontSize(20);
+    doc.text("SUNRISE UNITY GAMES SWSS", 15, 18); doc.setFontSize(11);
     doc.text("OFFICIAL PHYSICAL FITNESS TEST REPORT (AI JUMPING JACKS)", 15, 28);
     
-    // แสดงคะแนนภาพรวมของแต่ละคณะสี
-    doc.setTextColor(33, 33, 33);
-    doc.setFontSize(14);
+    doc.setTextColor(33, 33, 33); doc.setFontSize(14);
     doc.text("SUMMARY OF CURRENT TOTAL SCORES", 15, 52);
-    
     doc.setFontSize(11);
     doc.text(`- PURPLE COLOR (SHARK): ${cachedData.colorTotals["ม่วง"]} Points`, 20, 62);
     doc.text(`- ORANGE COLOR (TIGER): ${cachedData.colorTotals["ส้ม"]} Points`, 20, 70);
     doc.text(`- PINK COLOR (EAGLE): ${cachedData.colorTotals["ชมพู"]} Points`, 20, 78);
 
-    // สร้างตารางประวัติผู้เข้าทดสอบทั้งหมดลงใน PDF แบบออโต้
-    doc.setFontSize(14);
-    doc.text("CHRONOLOGICAL PARTICIPATION LOG", 15, 92);
+    doc.setFontSize(14); doc.text("CHRONOLOGICAL PARTICIPATION LOG", 15, 92);
 
     let tableRows = [];
     cachedData.rawRows.forEach(row => {
-      // แปลงวันที่หรือรูปแบบเวลาให้สวยงามสากลก่อนลงตาราง
       let dateFormatted = (row[0] instanceof Date) ? row[0].toLocaleString() : row[0];
       tableRows.push([dateFormatted, row[1], row[2], row[3], row[4]]);
     });
@@ -307,7 +304,6 @@
       styles: { fontSize: 10 }
     });
 
-    // เซฟไฟล์รายงาน PDF ออกมาทางเว็บเบราว์เซอร์
     doc.save("SUNRISE_UNITY_GAMES_SWSS_REPORT.pdf");
   }
 </script>
