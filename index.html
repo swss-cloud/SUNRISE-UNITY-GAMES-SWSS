@@ -26,11 +26,11 @@
     <div class="container mx-auto px-4 py-8 max-w-6xl">
         
         <header class="text-center mb-10 mt-2 select-none">
-            <h1 class="text-5xl sm:text-6xl font-black text-white tracking-wider uppercase drop-shadow-[0_5px_0_#0f172a] filter drop-shadow-[0_0_20px_rgba(255,255,255,0.4)]">
+            <h1 class="text-5xl sm:text-6xl font-black text-[#fef08a] tracking-wider uppercase drop-shadow-[0_5px_0_#000000] filter drop-shadow-[0_0_20px_rgba(254,240,138,0.4)]">
                 SUNRISE UNITY GAMES SWSS
             </h1>
             <div class="mt-4 inline-block">
-                <p class="text-[#fdba74] font-black tracking-widest text-xs sm:text-sm uppercase bg-slate-950/90 border-2 border-[#f97316] rounded-full px-6 py-2 shadow-[0_4px_15px_rgba(0,0,0,0.5)] backdrop-blur-md">
+                <p class="text-[#fef08a] font-black tracking-widest text-xs sm:text-sm uppercase bg-slate-950/90 border-2 border-[#f97316] rounded-full px-6 py-2 shadow-[0_4px_15px_rgba(0,0,0,0.5)] backdrop-blur-md">
                     ⚡ AI PHYSICAL FITNESS TEST SYSTEM (JUMPING JACKS) ⚡
                 </p>
             </div>
@@ -97,7 +97,7 @@
                             <p id="score" class="text-4xl font-black text-[#f43f5e] mt-1 drop-shadow-[0_2px_8px_rgba(244,63,94,0.3)]">0</p>
                         </div>
                         <div class="flex flex-col justify-center gap-2">
-                            <button id="btn-start" onclick="startTimer()" class="bg-white hover:bg-slate-200 text-slate-950 font-black py-2.5 px-3 text-base rounded-xl shadow-[0_4px_15px_rgba(255,255,255,0.2)] cursor-pointer transition transform active:scale-95 border-b-4 border-slate-400 tracking-wide uppercase">
+                            <button id="btn-start" onclick="startTimer()" class="bg-amber-400 hover:bg-amber-300 text-slate-950 font-black py-2.5 px-3 text-base rounded-xl shadow-[0_4px_15px_rgba(234,179,8,0.3)] cursor-pointer transition transform active:scale-95 border-b-4 border-amber-600 tracking-wide uppercase">
                                 ▶️ START (20s)
                             </button>
                             <button id="btn-save" onclick="saveScore()" disabled class="bg-slate-900 text-slate-700 font-bold py-2.5 px-3 text-sm rounded-xl opacity-30 cursor-not-allowed transition border border-slate-800/80">
@@ -302,6 +302,7 @@
             document.getElementById('btn-save').className = "bg-gradient-to-r from-emerald-400 to-green-500 hover:from-emerald-500 hover:to-green-600 text-slate-950 font-black py-2.5 px-3 text-sm rounded-xl shadow-md cursor-pointer transition transform active:scale-95 border-b-4 border-green-700 font-bold";
         }
 
+        // ระบบจับท่าทางจาก AI Camera
         function initCamera() {
             if (window.cameraInitialized) return;
 
@@ -393,7 +394,6 @@
                     ctx.beginPath();
                     ctx.moveTo(ptA.x * canvasElement.width, ptA.y * canvasElement.height);
                     ctx.lineTo(ptB.x * canvasElement.width, ptB.y * canvasElement.height);
-                    // เปลี่ยนสีกระดูกเป็นสีส้มสะท้อนแสง ให้แมตช์ธีมทัวร์นาเมนต์ไฟ
                     ctx.strokeStyle = 'rgba(249, 115, 22, 0.85)';
                     ctx.lineWidth = 4;
                     ctx.stroke();
@@ -406,7 +406,6 @@
                 if(pt && pt.visibility > 0.4) {
                     ctx.beginPath();
                     ctx.arc(pt.x * canvasElement.width, pt.y * canvasElement.height, 8, 0, 2 * Math.PI);
-                    // ปรับจุดสำคัญให้เป็นสีขาวเหลืองเรืองแสง มองเห็นชัดบนกล้อง
                     ctx.fillStyle = '#ffedd5';
                     ctx.shadowBlur = 10;
                     ctx.shadowColor = '#f97316';
