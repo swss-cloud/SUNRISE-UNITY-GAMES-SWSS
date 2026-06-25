@@ -63,7 +63,7 @@
             </div>
         </div>
 
-        <div id="main-section" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-8 animate-fadeIn">
+        <div id="main-section" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-8">
             
             <div class="lg:col-span-2 space-y-6">
                 <div class="bg-slate-950/85 border-2 border-slate-800 backdrop-blur-md rounded-3xl p-6 shadow-2xl">
@@ -302,7 +302,6 @@
             document.getElementById('btn-save').className = "bg-gradient-to-r from-emerald-400 to-green-500 hover:from-emerald-500 hover:to-green-600 text-slate-950 font-black py-2.5 px-3 text-sm rounded-xl shadow-md cursor-pointer transition transform active:scale-95 border-b-4 border-green-700 font-bold";
         }
 
-        // ระบบจับท่าทางจาก AI Camera
         function initCamera() {
             if (window.cameraInitialized) return;
 
@@ -496,6 +495,7 @@
             html2pdf().set(opt).from(element).save();
         }
 
+        // ฟังก์ชันอัปเดตสถิติตารางและกราฟ
         function updateDashboard() {
             const history = JSON.parse(localStorage.getItem('fitness_history')) || [];
             const tbody = document.getElementById('history-table-body');
