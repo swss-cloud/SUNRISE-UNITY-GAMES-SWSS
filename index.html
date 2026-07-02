@@ -138,6 +138,25 @@
 
             <!-- คอลัมน์ แดชบอร์ดสรุปผลทีมสถิติ -->
             <div class="space-y-6">
+                <!-- ส่วนกล่องแสดงสรุปคะแนนรวมแบบ Real-time แยกเป็นรายสีเด่นชัด -->
+                <div class="bg-slate-950/85 border-2 border-[#fdba74]/40 backdrop-blur-md rounded-2xl p-5 shadow-2xl">
+                    <h3 class="text-md font-black mb-4 text-[#fdba74] uppercase tracking-wider border-b border-slate-900 pb-2 flex items-center gap-1">🏆 บอร์ดคะแนนรวมแต่ละสี</h3>
+                    <div class="grid grid-cols-3 gap-3 text-center">
+                        <div class="bg-purple-950/60 border border-purple-500/40 p-2.5 rounded-xl">
+                            <p class="text-xs font-bold text-purple-300">สีม่วง 🟣</p>
+                            <p id="total-purple" class="text-2xl font-black text-white mt-1">0</p>
+                        </div>
+                        <div class="bg-orange-950/60 border border-orange-500/40 p-2.5 rounded-xl">
+                            <p class="text-xs font-bold text-orange-400">สีส้ม 🟠</p>
+                            <p id="total-orange" class="text-2xl font-black text-white mt-1">0</p>
+                        </div>
+                        <div class="bg-pink-950/60 border border-pink-500/40 p-2.5 rounded-xl">
+                            <p class="text-xs font-bold text-pink-300">สีชมพู 🌸</p>
+                            <p id="total-pink" class="text-2xl font-black text-white mt-1">0</p>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="bg-slate-950/85 border border-slate-900 backdrop-blur-md rounded-2xl p-6 shadow-2xl">
                     <h3 class="text-lg font-black mb-4 text-[#fdba74] uppercase tracking-wider border-b border-slate-900 pb-2">📊 ผลคะแนนรวมแยกตามทีม</h3>
                     <div class="relative h-64">
@@ -183,6 +202,9 @@
             orange: { text: 'ส้ม', hex: '#ff781f', bg: 'bg-orange-950 text-orange-400 border-orange-500/40 font-black' },
             pink: { text: 'ชมพู', hex: '#f472b6', bg: 'bg-pink-950 text-pink-300 border-pink-500/40 font-black' }
         };
+
+        // ตัวแปรเก็บคะแนนรวมแต่ละสีเพื่อเริ่มนับจาก 0 ทุกครั้งที่เปิดหน้าเว็บใหม่
+        let sessionColorTotals = { purple: 0, orange: 0, pink: 0 };
 
         function startApp() {
             const name = document.getElementById('user-name').value.trim();
@@ -456,15 +478,21 @@
                 tbody.appendChild(tr);
             });
 
-            const colorSums = { purple: 0, orange: 0, pink: 0 };
+            // ทำการคำนวณสถิติคะแนนเริ่มนับจาก 0 ของตัวแปรกลุ่มสีในเซสชันปัจจุบันนี้ใหม่ทั้งหมด
+            sessionColorTotals = { purple: 0, orange: 0, pink: 0 };
             history.forEach(item => {
-                if (colorSums[item.color] !== undefined) {
-                    colorSums[item.color] += item.score;
+                if (sessionColorTotals[item.color] !== undefined) {
+                    sessionColorTotals[item.color] += item.score;
                 }
             });
 
+            // ส่งข้อมูลคะแนนไปเรนเดอร์ทับในช่องสรุปผลข้อความสี่เหลี่ยมด้านบนกราฟ
+            document.getElementById('total-purple').innerText = sessionColorTotals.purple;
+            document.getElementById('total-orange').innerText = sessionColorTotals.orange;
+            document.getElementById('total-pink').innerText = sessionColorTotals.pink;
+
             if (colorChart) {
-                colorChart.data.datasets[0].data = [colorSums.purple, colorSums.orange, colorSums.pink];
+                colorChart.data.datasets[0].data = [sessionColorTotals.purple, sessionColorTotals.orange, sessionColorTotals.pink];
                 colorChart.update();
             }
 
@@ -475,13 +503,13 @@
             }
 
             let highestColor = 'purple';
-            if (colorSums.orange > colorSums[highestColor]) highestColor = 'orange';
-            if (colorSums.pink > colorSums[highestColor]) highestColor = 'pink';
+            if (sessionColorTotals.orange > sessionColorTotals[highestColor]) highestColor = 'orange';
+            if (sessionColorTotals.pink > sessionColorTotals[highestColor]) highestColor = 'pink';
 
-            let analysisText = `<p class="font-bold text-emerald-400 mb-1 flex items-center gap-1">🔥 ผู้นำปัจจุบัน: ทีมสี${colorMap[highestColor].text} (${colorSums[highestColor]} ครั้ง)</p>`;
+            let analysisText = `<p class="font-bold text-emerald-400 mb-1 flex items-center gap-1">🔥 ผู้นำปัจจุบัน: ทีมสี${colorMap[highestColor].text} (${sessionColorTotals[highestColor]} ครั้ง)</p>`;
             analysisText += `<ul class="list-disc pl-4 space-y-1 mt-2 text-slate-300 text-xs">`;
             ['purple', 'orange', 'pink'].forEach(col => {
-                const total = colorSums[col];
+                const total = sessionColorTotals[col];
                 if (total > 0) {
                     analysisText += `<li><strong class="text-white">สี${colorMap[col].text}:</strong> มีความคล่องตัวดีเยี่ยมในท่ากระโดดตบ <span class="text-[#fef08a] font-black">(รวมสะสม ${total} ครั้ง)</span></li>`;
                 }
@@ -524,6 +552,11 @@
                 }
             });
         }
+
+        // โครงสร้างบังคับล้างความจำบราว์เซอร์ LocalStorage เก่าที่ค้างอยู่ทิ้งไปทันทีก่อนหน้าเว็บจะทำงานครั้งแรก
+        window.addEventListener('DOMContentLoaded', () => {
+            localStorage.removeItem('fitness_history');
+        });
     </script>
 </body>
 </html>
