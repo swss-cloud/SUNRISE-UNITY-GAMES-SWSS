@@ -8,7 +8,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@400;700;900&display=swap');
         body {
@@ -25,6 +24,7 @@
 
     <div class="container mx-auto px-4 py-8 max-w-6xl">
         
+        <!-- ส่วนหัวข้อหลัก สีเหลืองทองนีออนสว่างสะดุดตา ไม่ใช้สีขาว ขอบเงาดำคมชัดหนาพิเศษ -->
         <header class="text-center mb-10 mt-2 select-none">
             <h1 class="text-5xl sm:text-6xl font-black text-[#fef08a] tracking-wider uppercase drop-shadow-[0_5px_0_#000000] filter drop-shadow-[0_0_20px_rgba(254,240,138,0.4)]">
                 SUNRISE UNITY GAMES SWSS
@@ -36,6 +36,7 @@
             </div>
         </header>
 
+        <!-- ส่วนกรอกข้อมูลสไตล์แชมเปี้ยนชิพ ปรับกล่องโปร่งแสงเห็นพื้นหลังลางๆ แต่ทึบพอให้อ่านง่าย -->
         <div id="setup-section" class="max-w-md mx-auto bg-slate-950/85 border-2 border-[#f97316]/60 backdrop-blur-md rounded-2xl p-8 shadow-[0_10px_30px_rgba(0,0,0,0.6)]">
             <h2 class="text-2xl font-black mb-6 text-center text-white border-b-2 border-slate-900 pb-3 tracking-wide">
                 📋 ข้อมูลผู้เข้าทดสอบ
@@ -63,6 +64,7 @@
             </div>
         </div>
 
+        <!-- หน้าบอร์ดทดสอบหลัก -->
         <div id="main-section" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-8">
             
             <div class="lg:col-span-2 space-y-6">
@@ -78,6 +80,7 @@
                         </div>
                     </div>
 
+                    <!-- กล่องแสดงวิดีโอกล้องสแกนร่างกาย -->
                     <div class="relative bg-black rounded-2xl overflow-hidden aspect-video border-4 border-slate-900 shadow-2xl flex items-center justify-center">
                         <video id="webcam" class="hidden" autoplay playsinline></video>
                         <canvas id="output_canvas" class="w-full h-full object-cover transform -scale-x-100"></canvas>
@@ -87,6 +90,7 @@
                         </div>
                     </div>
 
+                    <!-- แถบรายงานคะแนนความคมชัดสูงสไตล์สปอร์ตแมตช์พื้นหลัง -->
                     <div class="grid grid-cols-3 gap-4 mt-6 text-center">
                         <div class="bg-slate-900 border-2 border-slate-800 p-4 rounded-2xl shadow-xl">
                             <p class="text-xs text-[#94a3b8] uppercase tracking-widest font-black">เวลาที่เหลือ</p>
@@ -100,19 +104,14 @@
                             <button id="btn-start" onclick="startTimer()" class="bg-amber-400 hover:bg-amber-300 text-slate-950 font-black py-2.5 px-3 text-base rounded-xl shadow-[0_4px_15px_rgba(234,179,8,0.3)] cursor-pointer transition transform active:scale-95 border-b-4 border-amber-600 tracking-wide uppercase">
                                 ▶️ START (20s)
                             </button>
-                            <button id="btn-save" onclick="saveScore()" disabled class="bg-slate-900 text-slate-700 font-bold py-2.5 px-3 text-sm rounded-xl opacity-30 cursor-not-allowed transition border border-slate-800/80">
+                            <button id="btn-save" onclick="saveScore()" disabled class="w-full bg-slate-900 text-slate-700 font-bold py-2.5 px-3 text-sm rounded-xl opacity-30 cursor-not-allowed transition border border-slate-800/80">
                                 💾 บันทึกคะแนน
                             </button>
                         </div>
                     </div>
-
-                    <div class="mt-4 flex justify-end gap-3">
-                        <button id="btn-pdf" onclick="generatePDF()" disabled class="bg-slate-900 text-slate-600 font-black py-2.5 px-4 rounded-xl text-xs opacity-35 cursor-not-allowed transition border border-slate-800 shadow-md">
-                            📄 ดาวน์โหลด PDF รายบุคคล
-                        </button>
-                    </div>
                 </div>
 
+                <!-- ตารางประวัติผลการทดสอบ -->
                 <div class="bg-slate-950/85 border border-slate-900 backdrop-blur-md rounded-2xl p-6 shadow-2xl">
                     <div class="flex flex-wrap justify-between items-center mb-4 border-b border-slate-900 pb-3 gap-2">
                         <h3 class="text-xl font-bold text-white flex items-center gap-2 tracking-wide">
@@ -137,6 +136,7 @@
                 </div>
             </div>
 
+            <!-- คอลัมน์ แดชบอร์ดสรุปผลทีมสถิติ -->
             <div class="space-y-6">
                 <div class="bg-slate-950/85 border border-slate-900 backdrop-blur-md rounded-2xl p-6 shadow-2xl">
                     <h3 class="text-lg font-black mb-4 text-[#fdba74] uppercase tracking-wider border-b border-slate-900 pb-2">📊 ผลคะแนนรวมแยกตามทีม</h3>
@@ -160,45 +160,11 @@
         </div>
     </div>
 
-    <div class="hidden">
-        <div id="pdf-template" style="font-family: 'Kanit', sans-serif; color: #0f172a; padding: 45px; background: #fff;">
-            <div style="text-align: center; border-bottom: 3px double #f97316; padding-bottom: 15px; margin-bottom: 25px;">
-                <h2 style="font-size: 26px; font-weight: 900; color: #c2410c; margin: 0; tracking-wide: 1px;">SUNRISE UNITY GAMES SWSS</h2>
-                <p style="font-size: 14px; color: #64748b; font-weight: bold; margin: 6px 0 0 0;">ใบรายงานผลการทดสอบสมรรถภาพทางกายด้วยระบบปัญญาประดิษฐ์ (AI)</p>
-            </div>
-            <div style="margin-bottom: 25px; font-size: 16px; line-height: 1.8;">
-                <p style="margin: 4px 0;"><strong>วันที่ทดสอบ:</strong> <span id="pdf-date">-</span></p>
-                <p style="margin: 4px 0;"><strong>ชื่อ-นามสกุล ผู้เข้าทดสอบ:</strong> <span id="pdf-name">-</span></p>
-                <p style="margin: 4px 0;"><strong>ระดับชั้นเรียน / ห้อง:</strong> <span id="pdf-class">-</span></p>
-                <p style="margin: 4px 0;"><strong>กลุ่มสี / สังกัดเสือ:</strong> <span id="pdf-color">-</span></p>
-                <p style="margin: 4px 0;"><strong>ประเภทกิจกรรม:</strong> กระโดดตบ (Jumping Jacks) เป็นเวลา 20 วินาที</p>
-            </div>
-            <div style="background: #f1f5f9; border: 2px solid #cbd5e1; border-radius: 12px; padding: 25px; text-align: center; margin-bottom: 30px;">
-                <span style="font-size: 14px; color: #475569; display: block; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">สถิติจำนวนครั้งที่ทำได้</span>
-                <span id="pdf-score" style="font-size: 54px; font-weight: 900; color: #15803d; line-height: 1;">0</span>
-                <span style="font-size: 18px; font-weight: bold; color: #16a34a; display: block; margin-top: 8px;">ครั้ง (ในเวลา 20 วินาที)</span>
-            </div>
-            <div style="font-size: 14px; color: #1e293b; border-left: 4px solid #f97316; padding-left: 15px; margin-bottom: 40px; background: #f8fafc; padding-top: 10px; padding-bottom: 10px; border-radius: 0 8px 8px 0;">
-                <p style="font-weight: bold; margin: 0 0 5px 0; color: #c2410c;">💡 เกณฑ์การประเมินวิเคราะห์ผล:</p>
-                <p id="pdf-evaluation" style="margin: 0; color: #334155; font-weight: 500;">-</p>
-            </div>
-            <div style="margin-top: 80px; display: flex; justify-content: space-between; font-size: 14px; font-weight: bold;">
-                <div style="text-align: center; width: 220px;">
-                    <p style="margin-bottom: 60px; color: #64748b;">ลงชื่อ......................................................</p>
-                    <p style="color: #334155;">(......................................................)<br>ผู้เข้ารับการทดสอบ</p>
-                </div>
-                <div style="text-align: center; width: 220px;">
-                    <p style="margin-bottom: 60px; color: #64748b;">ลงชื่อ......................................................</p>
-                    <p style="color: #334155;">(......................................................)<br>กรรมการผู้จัดการทดสอบ</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <audio id="beep-sound" src="https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg" preload="auto"></audio>
 
     <script>
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzR5eQ3kbxhYwvrUDB3t9jcW5ZNbEfqvEreE2BVksr_7rTiWoFBSw2HU9UoD82HeZf3CA/exec'; 
+        // 🔗 ลิงก์เชื่อมโยงไปยังระบบคำนวณและแยกแผ่นชีตสีอัตโนมัติบน Google Apps Script
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzYZvEEt4l4jGFs226yjmO22bg3evjmoezGvEzBsj76vXt-qmgH9_2Rs6kxlR00-7sLFw/exec'; 
 
         let currentUser = { name: '', class: '', color: '' };
         let score = 0;
@@ -255,9 +221,7 @@
             document.getElementById('timer').innerText = timeLeft + "s";
             
             document.getElementById('btn-save').disabled = true;
-            document.getElementById('btn-save').className = "bg-slate-900 text-slate-600 border border-slate-800 font-bold py-2.5 px-3 text-sm rounded-xl opacity-30 cursor-not-allowed transition";
-            document.getElementById('btn-pdf').disabled = true;
-            document.getElementById('btn-pdf').className = "bg-slate-900 text-slate-600 font-bold py-2.5 px-4 rounded-xl text-xs opacity-35 cursor-not-allowed transition border border-slate-800 shadow";
+            document.getElementById('btn-save').className = "w-full bg-slate-900 text-slate-700 font-bold py-2.5 px-3 text-sm rounded-xl opacity-30 cursor-not-allowed transition border border-slate-800/80";
 
             const overlay = document.getElementById('countdown-overlay');
             overlay.classList.remove('hidden');
@@ -434,17 +398,14 @@
             localStorage.setItem('fitness_history', JSON.stringify(history));
             
             document.getElementById('btn-save').disabled = true;
-            document.getElementById('btn-save').className = "bg-slate-900 text-slate-600 border border-slate-800 font-bold py-2.5 px-3 text-sm rounded-xl opacity-30 cursor-not-allowed transition";
+            document.getElementById('btn-save').className = "w-full bg-slate-900 text-slate-700 font-bold py-2.5 px-3 text-sm rounded-xl opacity-30 cursor-not-allowed transition border border-slate-800/80";
             
-            document.getElementById('btn-pdf').disabled = false;
-            document.getElementById('btn-pdf').className = "bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-500 hover:to-yellow-600 text-slate-950 font-black py-2.5 px-4 rounded-xl text-xs shadow-md cursor-pointer transition transform active:scale-95 border-b-2 border-amber-600 font-bold";
-
             updateDashboard();
             sendToSheets(record);
         }
 
         function sendToSheets(record) {
-            if (!SCRIPT_URL || SCRIPT_URL === 'YOUR_WEB_APP_URL') {
+            if (!SCRIPT_URL || SCRIPT_URL.includes('YOUR_WEB_APP_URL')) {
                 console.log("ยังไม่ได้ตั้งค่า Web App URL สำหรับ Google Sheets");
                 return;
             }
@@ -456,10 +417,15 @@
             const urlWithParams = `${SCRIPT_URL}?date=${encodeURIComponent(record.date)}&name=${encodeURIComponent(record.name)}&class=${encodeURIComponent(record.class)}&color=${encodeURIComponent(colorMap[record.color].text)}&mode=${encodeURIComponent(record.mode)}&score=${record.score}`;
 
             fetch(urlWithParams, { method: 'GET', mode: 'cors' })
-                .then(response => {
-                    statusText.innerText = "✅ ซิงค์ Google Sheet สำเร็จ!";
-                    statusText.className = "text-xs font-black text-emerald-400";
-                    alert("บันทึกคะแนนและส่งข้อมูลเข้า Google Sheets สำเร็จแล้ว! 💯");
+                .then(response => response.json())
+                .then(data => {
+                    if(data.status === "success") {
+                        statusText.innerText = "✅ ซิงค์ Google Sheet สำเร็จ!";
+                        statusText.className = "text-xs font-black text-emerald-400";
+                        alert("บันทึกคะแนนและส่งข้อมูลเข้า Google Sheets สำเร็จแล้ว! 💯");
+                    } else {
+                        throw new Error(data.message || "Apps Script Error");
+                    }
                 })
                 .catch(error => {
                     console.error('Error:', error);
@@ -469,33 +435,6 @@
                 });
         }
 
-        function generatePDF() {
-            document.getElementById('pdf-date').innerText = new Date().toLocaleDateString('th-TH');
-            document.getElementById('pdf-name').innerText = currentUser.name;
-            document.getElementById('pdf-class').innerText = currentUser.class;
-            document.getElementById('pdf-color').innerText = `สี${colorMap[currentUser.color].text}`;
-            document.getElementById('pdf-score').innerText = score;
-
-            let evaluation = "";
-            if(score >= 25) evaluation = "ระดับ: ดีเยี่ยม (Excellent) - มีการทำงานประสานกันของระบบประสาทและกล้ามเนื้อ รวมถึงอัตราความเร็วของสปริงตัวที่ดีเลิศ";
-            else if(score >= 18) evaluation = "ระดับ: ดี (Good) - สมรรถภาพร่างกายฟิตสมบูรณ์แข็งแรงผ่านเกณฑ์มาตรฐานระดับสูง";
-            else if(score >= 10) evaluation = "ระดับ: ผ่านเกณฑ์ (Fair) - อยู่ในเกณฑ์มาตรฐานสุขภาพทั่วไป ควรหมั่นออกกำลังกายสม่ำเสมอ";
-            else evaluation = "ระดับ: ควรปรับปรุง (Improvement) - ต่ำกว่าเกณฑ์มาตรฐาน แนะนำเพิ่มความแข็งแรงของระบบหัวใจและหลอดเลือด";
-            
-            document.getElementById('pdf-evaluation').innerText = evaluation;
-
-            const element = document.getElementById('pdf-template');
-            const opt = {
-                margin:       10,
-                filename:     `ผลการทดสอบ_${currentUser.name}_${currentUser.class}.pdf`,
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true },
-                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            };
-            html2pdf().set(opt).from(element).save();
-        }
-
-        // ฟังก์ชันอัปเดตสถิติตารางและกราฟ
         function updateDashboard() {
             const history = JSON.parse(localStorage.getItem('fitness_history')) || [];
             const tbody = document.getElementById('history-table-body');
