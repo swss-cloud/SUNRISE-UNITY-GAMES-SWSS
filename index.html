@@ -24,7 +24,7 @@
 
     <div class="container mx-auto px-4 py-8 max-w-6xl">
         
-        <!-- ส่วนหัวข้อหลัก สีเหลืองทองนีออนสว่างสะดุดตา ไม่ใช้สีขาว ขอบเงาดำคมชัดหนาพิเศษ -->
+        <!-- ส่วนหัวข้อหลัก สีเหลืองทองนีออนสว่างสะดุดตา -->
         <header class="text-center mb-10 mt-2 select-none">
             <h1 class="text-5xl sm:text-6xl font-black text-[#fef08a] tracking-wider uppercase drop-shadow-[0_5px_0_#000000] filter drop-shadow-[0_0_20px_rgba(254,240,138,0.4)]">
                 SUNRISE UNITY GAMES SWSS
@@ -36,7 +36,7 @@
             </div>
         </header>
 
-        <!-- ส่วนกรอกข้อมูลสไตล์แชมเปี้ยนชิพ ปรับกล่องโปร่งแสงเห็นพื้นหลังลางๆ แต่ทึบพอให้อ่านง่าย -->
+        <!-- ส่วนกรอกข้อมูลผู้เข้าทดสอบ -->
         <div id="setup-section" class="max-w-md mx-auto bg-slate-950/85 border-2 border-[#f97316]/60 backdrop-blur-md rounded-2xl p-8 shadow-[0_10px_30px_rgba(0,0,0,0.6)]">
             <h2 class="text-2xl font-black mb-6 text-center text-white border-b-2 border-slate-900 pb-3 tracking-wide">
                 📋 ข้อมูลผู้เข้าทดสอบ
@@ -97,7 +97,7 @@
                             <p id="timer" class="text-4xl font-black text-[#f97316] mt-1 drop-shadow-[0_2px_8px_rgba(249,115,22,0.3)]">20s</p>
                         </div>
                         <div class="bg-slate-900 border-2 border-slate-800 p-4 rounded-2xl shadow-xl">
-                            <p class="text-xs text-[#94a3b8] uppercase tracking-widest font-black">คะแนนสะสม</p>
+                            <p class="text-xs text-[#94a3b8] uppercase tracking-widest font-black">คะแนนรอบปัจจุบัน</p>
                             <p id="score" class="text-4xl font-black text-[#f43f5e] mt-1 drop-shadow-[0_2px_8px_rgba(244,63,94,0.3)]">0</p>
                         </div>
                         <div class="flex flex-col justify-center gap-2">
@@ -138,9 +138,9 @@
 
             <!-- คอลัมน์ แดชบอร์ดสรุปผลทีมสถิติ -->
             <div class="space-y-6">
-                <!-- ส่วนกล่องแสดงสรุปคะแนนรวมแบบ Real-time แยกเป็นรายสีเด่นชัด -->
+                <!-- กล่องแสดงตัวเลขสรุปคะแนนรวมสะสมแยกตามสีค้างจอไว้เสมอ -->
                 <div class="bg-slate-950/85 border-2 border-[#fdba74]/40 backdrop-blur-md rounded-2xl p-5 shadow-2xl">
-                    <h3 class="text-md font-black mb-4 text-[#fdba74] uppercase tracking-wider border-b border-slate-900 pb-2 flex items-center gap-1">🏆 บอร์ดคะแนนรวมแต่ละสี</h3>
+                    <h3 class="text-md font-black mb-4 text-[#fdba74] uppercase tracking-wider border-b border-slate-900 pb-2 flex items-center gap-1">🏆 บอร์ดคะแนนรวมสะสมแต่ละสี</h3>
                     <div class="grid grid-cols-3 gap-3 text-center">
                         <div class="bg-purple-950/60 border border-purple-500/40 p-2.5 rounded-xl">
                             <p class="text-xs font-bold text-purple-300">สีม่วง 🟣</p>
@@ -182,7 +182,7 @@
     <audio id="beep-sound" src="https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg" preload="auto"></audio>
 
     <script>
-        // 🔗 ลิงก์เชื่อมโยงไปยังระบบคำนวณและแยกแผ่นชีตสีอัตโนมัติบน Google Apps Script
+        // 🔗 ลิงก์เชื่อมโยงไปยังระบบ Google Apps Script ตัวเดิมของคุณ
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzYZvEEt4l4jGFs226yjmO22bg3evjmoezGvEzBsj76vXt-qmgH9_2Rs6kxlR00-7sLFw/exec'; 
 
         let currentUser = { name: '', class: '', color: '' };
@@ -202,9 +202,6 @@
             orange: { text: 'ส้ม', hex: '#ff781f', bg: 'bg-orange-950 text-orange-400 border-orange-500/40 font-black' },
             pink: { text: 'ชมพู', hex: '#f472b6', bg: 'bg-pink-950 text-pink-300 border-pink-500/40 font-black' }
         };
-
-        // ตัวแปรเก็บคะแนนรวมแต่ละสีเพื่อเริ่มนับจาก 0 ทุกครั้งที่เปิดหน้าเว็บใหม่
-        let sessionColorTotals = { purple: 0, orange: 0, pink: 0 };
 
         function startApp() {
             const name = document.getElementById('user-name').value.trim();
@@ -439,15 +436,10 @@
             const urlWithParams = `${SCRIPT_URL}?date=${encodeURIComponent(record.date)}&name=${encodeURIComponent(record.name)}&class=${encodeURIComponent(record.class)}&color=${encodeURIComponent(colorMap[record.color].text)}&mode=${encodeURIComponent(record.mode)}&score=${record.score}`;
 
             fetch(urlWithParams, { method: 'GET', mode: 'cors' })
-                .then(response => response.json())
-                .then(data => {
-                    if(data.status === "success") {
-                        statusText.innerText = "✅ ซิงค์ Google Sheet สำเร็จ!";
-                        statusText.className = "text-xs font-black text-emerald-400";
-                        alert("บันทึกคะแนนและส่งข้อมูลเข้า Google Sheets สำเร็จแล้ว! 💯");
-                    } else {
-                        throw new Error(data.message || "Apps Script Error");
-                    }
+                .then(response => {
+                    statusText.innerText = "✅ ซิงค์ Google Sheet สำเร็จ!";
+                    statusText.className = "text-xs font-black text-emerald-400";
+                    alert("บันทึกคะแนนและส่งข้อมูลเข้า Google Sheets สำเร็จแล้ว! 💯");
                 })
                 .catch(error => {
                     console.error('Error:', error);
@@ -478,21 +470,21 @@
                 tbody.appendChild(tr);
             });
 
-            // ทำการคำนวณสถิติคะแนนเริ่มนับจาก 0 ของตัวแปรกลุ่มสีในเซสชันปัจจุบันนี้ใหม่ทั้งหมด
-            sessionColorTotals = { purple: 0, orange: 0, pink: 0 };
+            // คำนวณหาคะแนนรวมสะสมแต่ละสีจากประวัติที่มีอยู่
+            const colorSums = { purple: 0, orange: 0, pink: 0 };
             history.forEach(item => {
-                if (sessionColorTotals[item.color] !== undefined) {
-                    sessionColorTotals[item.color] += item.score;
+                if (colorSums[item.color] !== undefined) {
+                    colorSums[item.color] += item.score;
                 }
             });
 
-            // ส่งข้อมูลคะแนนไปเรนเดอร์ทับในช่องสรุปผลข้อความสี่เหลี่ยมด้านบนกราฟ
-            document.getElementById('total-purple').innerText = sessionColorTotals.purple;
-            document.getElementById('total-orange').innerText = sessionColorTotals.orange;
-            document.getElementById('total-pink').innerText = sessionColorTotals.pink;
+            // แสดงผลคะแนนสะสมแบบตัวหนังสือค้างไว้ตลอด
+            document.getElementById('total-purple').innerText = colorSums.purple;
+            document.getElementById('total-orange').innerText = colorSums.orange;
+            document.getElementById('total-pink').innerText = colorSums.pink;
 
             if (colorChart) {
-                colorChart.data.datasets[0].data = [sessionColorTotals.purple, sessionColorTotals.orange, sessionColorTotals.pink];
+                colorChart.data.datasets[0].data = [colorSums.purple, colorSums.orange, colorSums.pink];
                 colorChart.update();
             }
 
@@ -503,13 +495,13 @@
             }
 
             let highestColor = 'purple';
-            if (sessionColorTotals.orange > sessionColorTotals[highestColor]) highestColor = 'orange';
-            if (sessionColorTotals.pink > sessionColorTotals[highestColor]) highestColor = 'pink';
+            if (colorSums.orange > colorSums[highestColor]) highestColor = 'orange';
+            if (colorSums.pink > colorSums[highestColor]) highestColor = 'pink';
 
-            let analysisText = `<p class="font-bold text-emerald-400 mb-1 flex items-center gap-1">🔥 ผู้นำปัจจุบัน: ทีมสี${colorMap[highestColor].text} (${sessionColorTotals[highestColor]} ครั้ง)</p>`;
+            let analysisText = `<p class="font-bold text-emerald-400 mb-1 flex items-center gap-1">🔥 ผู้นำปัจจุบัน: ทีมสี${colorMap[highestColor].text} (${colorSums[highestColor]} ครั้ง)</p>`;
             analysisText += `<ul class="list-disc pl-4 space-y-1 mt-2 text-slate-300 text-xs">`;
             ['purple', 'orange', 'pink'].forEach(col => {
-                const total = sessionColorTotals[col];
+                const total = colorSums[col];
                 if (total > 0) {
                     analysisText += `<li><strong class="text-white">สี${colorMap[col].text}:</strong> มีความคล่องตัวดีเยี่ยมในท่ากระโดดตบ <span class="text-[#fef08a] font-black">(รวมสะสม ${total} ครั้ง)</span></li>`;
                 }
@@ -553,9 +545,10 @@
             });
         }
 
-        // โครงสร้างบังคับล้างความจำบราว์เซอร์ LocalStorage เก่าที่ค้างอยู่ทิ้งไปทันทีก่อนหน้าเว็บจะทำงานครั้งแรก
+        // เรียกเปิดข้อมูลประวัติเก่าในเครื่องแสดงทันทีเมื่อพร้อม
         window.addEventListener('DOMContentLoaded', () => {
-            localStorage.removeItem('fitness_history');
+            initChart();
+            updateDashboard();
         });
     </script>
 </body>
