@@ -138,9 +138,9 @@
 
             <!-- คอลัมน์ แดชบอร์ดสรุปผลทีมสถิติ -->
             <div class="space-y-6">
-                <!-- กล่องแสดงตัวเลขสรุปคะแนนรวมสะสมแยกตามสีค้างจอไว้เสมอ -->
+                <!-- ส่วนกล่องแสดงสรุปคะแนนรวมดึงจาก Google Sheets ค้างจอไว้ตลอดเวลา -->
                 <div class="bg-slate-950/85 border-2 border-[#fdba74]/40 backdrop-blur-md rounded-2xl p-5 shadow-2xl">
-                    <h3 class="text-md font-black mb-4 text-[#fdba74] uppercase tracking-wider border-b border-slate-900 pb-2 flex items-center gap-1">🏆 บอร์ดคะแนนรวมสะสมแต่ละสี</h3>
+                    <h3 class="text-md font-black mb-4 text-[#fdba74] uppercase tracking-wider border-b border-slate-900 pb-2 flex items-center gap-1">🏆 คะแนนรวมล่าสุดจาก Google Sheets</h3>
                     <div class="grid grid-cols-3 gap-3 text-center">
                         <div class="bg-purple-950/60 border border-purple-500/40 p-2.5 rounded-xl">
                             <p class="text-xs font-bold text-purple-300">สีม่วง 🟣</p>
@@ -182,8 +182,8 @@
     <audio id="beep-sound" src="https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg" preload="auto"></audio>
 
     <script>
-        // 🔗 ลิงก์เชื่อมโยงไปยังระบบ Google Apps Script ตัวเดิมของคุณ
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzYZvEEt4l4jGFs226yjmO22bg3evjmoezGvEzBsj76vXt-qmgH9_2Rs6kxlR00-7sLFw/exec'; 
+        // 🔗 ลิงก์เชื่อมโยงไปยังระบบ Google Apps Script ตัวล่าสุดของคุณเรียบร้อยแล้วครับ
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzMGX0TkTXekKKaXMcRiixXxtrpeU2D52u7BLhmE7rxI8sSL7ZKs5UgI-A6WVu3DVw8Rg/exec'; 
 
         let currentUser = { name: '', class: '', color: '' };
         let score = 0;
@@ -203,6 +203,49 @@
             pink: { text: 'ชมพู', hex: '#f472b6', bg: 'bg-pink-950 text-pink-300 border-pink-500/40 font-black' }
         };
 
+        // ตัวแปรเก็บคะแนนรวมหลักที่ดึงมาจากฐานข้อมูลออนไลน์
+        let liveColorTotals = { purple: 0, orange: 0, pink: 0 };
+
+        // 🟢 ฟังก์ชันดึงคะแนนสดจาก Google Sheets มาโชว์บนหน้าจอทันทีที่เปิดเว็บผ่าน JSONP
+        function loadLiveScoresFromSheets() {
+            if (!SCRIPT_URL) return;
+            const statusText = document.getElementById('sheet-status');
+            statusText.innerText = "⏳ กำลังดึงคะแนนรวมจาก Google Sheets...";
+
+            const callbackName = 'jsonp_live_load_' + Math.round(100000 * Math.random());
+            window[callbackName] = function(data) {
+                if (data.status === "success") {
+                    liveColorTotals = data.totals;
+                    
+                    // แสดงผลตัวเลขคะแนนรวมสะสมค้างจอตลอดเวลา
+                    document.getElementById('total-purple').innerText = liveColorTotals.purple;
+                    document.getElementById('total-orange').innerText = liveColorTotals.orange;
+                    document.getElementById('total-pink').innerText = liveColorTotals.pink;
+                    
+                    statusText.innerText = "📊 ระบบชีตออนไลน์: ดึงคะแนนสำเร็จ";
+                    
+                    if (colorChart) {
+                        colorChart.data.datasets[0].data = [liveColorTotals.purple, liveColorTotals.orange, liveColorTotals.pink];
+                        colorChart.update();
+                    }
+                    updateAnalysisBox();
+                }
+                document.body.removeChild(script);
+                delete window[callbackName];
+            };
+
+            const script = document.createElement('script');
+            script.src = `${SCRIPT_URL}?action=getLiveScore&callback=${callbackName}`;
+            document.body.appendChild(script);
+        }
+
+        // ดึงคะแนนจากคลาวด์ทันทีเมื่อเปิดเข้าสู่หน้าเว็บ
+        window.addEventListener('DOMContentLoaded', () => {
+            initChart();
+            loadLiveScoresFromSheets();
+            updateDashboard();
+        });
+
         function startApp() {
             const name = document.getElementById('user-name').value.trim();
             const textClass = document.getElementById('user-class').value.trim();
@@ -220,8 +263,10 @@
             document.getElementById('main-section').classList.remove('hidden');
 
             initCamera();
-            initChart();
-            updateDashboard();
+            if (colorChart) {
+                colorChart.data.datasets[0].data = [liveColorTotals.purple, liveColorTotals.orange, liveColorTotals.pink];
+                colorChart.update();
+            }
         }
 
         function backToSetup() {
@@ -419,40 +464,45 @@
             document.getElementById('btn-save').disabled = true;
             document.getElementById('btn-save').className = "w-full bg-slate-900 text-slate-700 font-bold py-2.5 px-3 text-sm rounded-xl opacity-30 cursor-not-allowed transition border border-slate-800/80";
             
+            // เพิ่มแต้มลงบนบอร์ดจำลองทันทีก่อนชีตรีโหลดสำเร็จเพื่อความต่อเนื่อง
+            liveColorTotals[currentUser.color] += score;
+            document.getElementById('total-' + currentUser.color).innerText = liveColorTotals[currentUser.color];
+            
+            if (colorChart) {
+                colorChart.data.datasets[0].data = [liveColorTotals.purple, liveColorTotals.orange, liveColorTotals.pink];
+                colorChart.update();
+            }
+
             updateDashboard();
             sendToSheets(record);
         }
 
         function sendToSheets(record) {
-            if (!SCRIPT_URL || SCRIPT_URL.includes('YOUR_WEB_APP_URL')) {
-                console.log("ยังไม่ได้ตั้งค่า Web App URL สำหรับ Google Sheets");
-                return;
-            }
-
             const statusText = document.getElementById('sheet-status');
             statusText.innerText = "⏳ กำลังซิงค์ไป Google Sheet...";
             statusText.className = "text-xs font-black text-yellow-300 animate-pulse";
 
-            const urlWithParams = `${SCRIPT_URL}?date=${encodeURIComponent(record.date)}&name=${encodeURIComponent(record.name)}&class=${encodeURIComponent(record.class)}&color=${encodeURIComponent(colorMap[record.color].text)}&mode=${encodeURIComponent(record.mode)}&score=${record.score}`;
-
-            fetch(urlWithParams, { method: 'GET', mode: 'cors' })
-                .then(response => {
+            const callbackName = 'jsonp_save_' + Math.round(100000 * Math.random());
+            window[callbackName] = function(data) {
+                if(data.status === "success") {
                     statusText.innerText = "✅ ซิงค์ Google Sheet สำเร็จ!";
                     statusText.className = "text-xs font-black text-emerald-400";
-                    alert("บันทึกคะแนนและส่งข้อมูลเข้า Google Sheets สำเร็จแล้ว! 💯");
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    statusText.innerText = "❌ ซิงค์ข้อมูลผิดพลาด";
-                    statusText.className = "text-xs font-black text-rose-400";
-                    alert("บันทึกข้อมูลในเครื่องสำเร็จ แต่ไม่สามารถส่งไป Google Sheet ได้");
-                });
+                    alert("บันทึกคะแนนสะสมเรียบร้อยแล้ว! 💯");
+                    loadLiveScoresFromSheets();
+                }
+                document.body.removeChild(script);
+                delete window[callbackName];
+            };
+
+            const script = document.createElement('script');
+            script.src = `${SCRIPT_URL}?date=${encodeURIComponent(record.date)}&name=${encodeURIComponent(record.name)}&class=${encodeURIComponent(record.class)}&color=${encodeURIComponent(colorMap[record.color].text)}&mode=${encodeURIComponent(record.mode)}&score=${record.score}&callback=${callbackName}`;
+            document.body.appendChild(script);
         }
 
         function updateDashboard() {
             const history = JSON.parse(localStorage.getItem('fitness_history')) || [];
             const tbody = document.getElementById('history-table-body');
-            tbody.innerHTML = history.length === 0 ? `<tr><td colspan="5" class="text-center py-6 text-slate-500 font-bold">ยังไม่มีข้อมูลการบันทึก</td></tr>` : '';
+            tbody.innerHTML = history.length === 0 ? `<tr><td colspan="5" class="text-center py-6 text-slate-500 font-bold">ยังไม่มีข้อมูลการบันทึกในเซสชันนี้</td></tr>` : '';
             
             [...history].reverse().forEach(item => {
                 const badgeStyle = colorMap[item.color]?.bg || '';
@@ -469,42 +519,25 @@
                 `;
                 tbody.appendChild(tr);
             });
+            updateAnalysisBox();
+        }
 
-            // คำนวณหาคะแนนรวมสะสมแต่ละสีจากประวัติที่มีอยู่
-            const colorSums = { purple: 0, orange: 0, pink: 0 };
-            history.forEach(item => {
-                if (colorSums[item.color] !== undefined) {
-                    colorSums[item.color] += item.score;
-                }
-            });
-
-            // แสดงผลคะแนนสะสมแบบตัวหนังสือค้างไว้ตลอด
-            document.getElementById('total-purple').innerText = colorSums.purple;
-            document.getElementById('total-orange').innerText = colorSums.orange;
-            document.getElementById('total-pink').innerText = colorSums.pink;
-
-            if (colorChart) {
-                colorChart.data.datasets[0].data = [colorSums.purple, colorSums.orange, colorSums.pink];
-                colorChart.update();
-            }
-
+        function updateAnalysisBox() {
             const analysisBox = document.getElementById('ai-analysis');
-            if (history.length === 0) {
-                analysisBox.innerHTML = "ไม่มีข้อมูลเพียงพอสำหรับการวิเคราะห์ กรุณาทำการทดสอบและบันทึกคะแนน";
+            let highestColor = 'purple';
+            if (liveColorTotals.orange > liveColorTotals[highestColor]) highestColor = 'orange';
+            if (liveColorTotals.pink > liveColorTotals[highestColor]) highestColor = 'pink';
+
+            if (liveColorTotals.purple === 0 && liveColorTotals.orange === 0 && liveColorTotals.pink === 0) {
+                analysisBox.innerHTML = "กำลังดึงข้อมูลคะแนนรวมจากชีตออนไลน์...";
                 return;
             }
 
-            let highestColor = 'purple';
-            if (colorSums.orange > colorSums[highestColor]) highestColor = 'orange';
-            if (colorSums.pink > colorSums[highestColor]) highestColor = 'pink';
-
-            let analysisText = `<p class="font-bold text-emerald-400 mb-1 flex items-center gap-1">🔥 ผู้นำปัจจุบัน: ทีมสี${colorMap[highestColor].text} (${colorSums[highestColor]} ครั้ง)</p>`;
+            let analysisText = `<p class="font-bold text-emerald-400 mb-1 flex items-center gap-1">🔥 ทีมนำปัจจุบันบนคลาวด์: สี${colorMap[highestColor].text} (${liveColorTotals[highestColor]} ครั้ง)</p>`;
             analysisText += `<ul class="list-disc pl-4 space-y-1 mt-2 text-slate-300 text-xs">`;
             ['purple', 'orange', 'pink'].forEach(col => {
-                const total = colorSums[col];
-                if (total > 0) {
-                    analysisText += `<li><strong class="text-white">สี${colorMap[col].text}:</strong> มีความคล่องตัวดีเยี่ยมในท่ากระโดดตบ <span class="text-[#fef08a] font-black">(รวมสะสม ${total} ครั้ง)</span></li>`;
-                }
+                const total = liveColorTotals[col];
+                analysisText += `<li><strong class="text-white">สี${colorMap[col].text}:</strong> คะแนนรวมสะสมปัจจุบันอยู่ที่ <span class="text-[#fef08a] font-black">${total} ครั้ง</span></li>`;
             });
             analysisText += `</ul>`;
             analysisBox.innerHTML = analysisText;
@@ -544,12 +577,6 @@
                 }
             });
         }
-
-        // เรียกเปิดข้อมูลประวัติเก่าในเครื่องแสดงทันทีเมื่อพร้อม
-        window.addEventListener('DOMContentLoaded', () => {
-            initChart();
-            updateDashboard();
-        });
     </script>
 </body>
 </html>
